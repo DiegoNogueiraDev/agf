@@ -114,7 +114,7 @@ jobs:
           shasum -a 256 "${{ matrix.out }}" > "${{ matrix.out }}.sha256"
 
       - name: Attach binary + checksum to the GitHub Release
-        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
+        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
         with:
           files: |
             dist-bun/${{ matrix.out }}
