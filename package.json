@@ -156,7 +156,7 @@
     "web-tree-sitter": "^0.26.10",
     "ws": "^8.21.0",
     "yaml": "^2.8.2",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "optionalDependencies": {
     "@github/copilot-sdk": "^1.0.5",
