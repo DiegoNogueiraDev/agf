@@ -1,0 +1,10 @@
+{
+  "id": "economy-suite",
+  "tier": "S",
+  "persona": "dev",
+  "prd": "Economy benchmark suite — run via agf eval --suite economy. Contains sub-scenarios (e1-low-budget, e2-mid-budget, e3-tight-budget) each with tokenBudget and expectedResolve flags.",
+  "testCmd": "echo 'simulate:ok'",
+  "tokenBudget": 5000,
+  "expectedResolve": true,
+  "tags": ["economy", "benchmark", "suite"]
+}

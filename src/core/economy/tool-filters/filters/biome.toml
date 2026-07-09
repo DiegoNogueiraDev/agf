@@ -1,0 +1,10 @@
+[[filters]]
+name = "biome"
+priority = 32
+detect = ["biome", "linter", "formatter", "analyzer", "Suspicious", "correctness"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 300
+on_empty = "no lint errors"

@@ -1,0 +1,49 @@
+agent-graph-flow (agf)
+Copyright © 2026 Diego Lima Nogueira de Paula
+
+This product is licensed under the Apache License, Version 2.0 (the "License");
+you may not use this product except in compliance with the License. A copy of
+the License is provided in the LICENSE file and at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Ownership and maintenance
+--------------------------
+Diego Lima Nogueira de Paula is the author and maintainer of this project and
+holds the copyright in the original work. The software is provided on an "AS IS"
+basis, without warranties or conditions of any kind. External contributions are
+neither expected nor guaranteed to be reviewed.
+
+Third-party components
+----------------------
+This product incorporates portions of third-party open-source software. Those
+portions remain under their own licences and the copyright of their respective
+authors; the Apache License 2.0 governs this work as a whole, not those portions.
+
+Each component, its licence, its copyright holder, and the exact files of this
+project that derive from it are recorded in:
+
+    THIRD-PARTY-NOTICES.md
+
+Components, in brief:
+
+  * rtk                — Apache-2.0 — Patrick Szymkowiak
+  * 9router            — MIT        — © 2024-2026 decolua and contributors
+  * mempalace          — MIT        — © 2026 MemPalace Contributors
+  * agentmemory        — Apache-2.0
+  * codegraph          — MIT        — © 2026 Colby Mchenry
+  * claw-code          — MIT        — © 2026 UltraWorkers and Claw Code contributors
+  * OpenAI Codex       — Apache-2.0 — © 2025 OpenAI
+  * opencode           — MIT        — © 2025 opencode
+  * browser-harness    — MIT        — © 2026 Browser Use
+  * surface-skill      — MIT        — © 2026 Diego Nogueira
+
+Propagated NOTICE (Apache-2.0 §4(d)), from OpenAI Codex:
+
+    OpenAI Codex
+    Copyright 2025 OpenAI
+
+    This project includes code derived from Ratatui
+    (https://github.com/ratatui/ratatui), licensed under the MIT license.
+    Copyright (c) 2016-2022 Florian Dehau
+    Copyright (c) 2023-2025 The Ratatui Developers

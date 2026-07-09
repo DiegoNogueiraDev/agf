@@ -1,0 +1,10 @@
+[[filters]]
+name = "xcodebuild"
+priority = 50
+detect = ["xcodebuild", "Build settings", "\\*\\* BUILD", "error:", "warning:", "CompileC", "Ld "]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^\\t", "^    "]
+max_lines = 200
+on_empty = "build succeeded"

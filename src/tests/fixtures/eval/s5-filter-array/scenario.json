@@ -1,0 +1,9 @@
+{
+  "id": "s5-filter-array",
+  "tier": "S",
+  "prd": "Write `uniqueBy<T>(arr: T[], key: (item: T) => string): T[]` that deduplicates an array keeping the first occurrence per key. Export from src/utils/unique-by.ts. AC: deduplicates by key.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["utility", "array", "simple"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

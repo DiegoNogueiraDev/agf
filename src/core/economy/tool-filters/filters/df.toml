@@ -1,0 +1,9 @@
+[[filters]]
+name = "df"
+priority = 60
+detect = ["Filesystem", "Size", "Used", "Avail", "Capacity", "Mounted on", "Mounted"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 160
+max_lines = 30

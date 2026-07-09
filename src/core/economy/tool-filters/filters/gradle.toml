@@ -1,0 +1,10 @@
+[[filters]]
+name = "gradle"
+priority = 50
+detect = ["BUILD SUCCESSFUL", "BUILD FAILED", ":compile", ":test", "gradle"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^> Task"]
+max_lines = 200
+on_empty = "build succeeded"

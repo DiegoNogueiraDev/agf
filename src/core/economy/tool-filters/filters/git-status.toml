@@ -1,0 +1,11 @@
+# git status — compact: drop "nothing to commit", keep branch + changes
+[[filters]]
+name = "git-status"
+priority = 20
+detect = ["On branch", "nothing to commit", "Changes", "Untracked files"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^\\s+\\("]
+max_lines = 100
+on_empty = "working tree clean"

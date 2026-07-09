@@ -1,0 +1,8 @@
+[[filters]]
+name = "du"
+priority = 60
+detect = ["\\d+\\s+.*/"]
+
+[filters.pipeline]
+strip_ansi = true
+head_lines = 60

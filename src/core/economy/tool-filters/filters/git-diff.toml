@@ -1,0 +1,9 @@
+# git diff — compact: only changed lines, strip context
+[[filters]]
+name = "git-diff"
+priority = 10
+detect = ["diff --git", "^@@ -\\d+,\\d+ \\+\\d+,\\d+ @@"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 500

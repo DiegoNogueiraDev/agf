@@ -1,0 +1,127 @@
+name: package-bun
+
+# Builds the 5 tamper-resistant, self-contained agf binaries (darwin arm64/x64,
+# linux x64/arm64, windows x64) via `bun run pack:bun`.
+# Bun cross-compiles every OS/arch from one host (SQLite is the embedded
+# bun:sqlite — no native .node), so no OS matrix is needed. NOTE: the darwin
+# binaries only get a VALID ad-hoc signature when this runner is macOS (pack-bun
+# re-signs via `codesign`); on a non-mac host they ship unsigned (a warning is
+# printed). Artifacts are uploaded; on a release they attach to the Release.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/pack-bun.mjs'
+      - 'package.json'
+      - '.github/workflows/package-bun.yml'
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: package-bun-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package-bun:
+    name: package-bun (cross-compile mac/linux/win)
+    # The release host runs its own runner (label `agf`). A fork gets `ubuntu-latest`
+    # and can still build; only the publish step below is gated on the runner and
+    # the RELEASES_DIR secret existing.
+    runs-on: ${{ vars.AGF_RUNNER_LABELS && fromJSON(vars.AGF_RUNNER_LABELS) || 'ubuntu-latest' }}
+    env:
+      # The absolute path lives in a repository secret, not in this file: a public
+      # repo must not disclose the filesystem layout of the machine that serves it.
+      RELEASES_DIR: ${{ secrets.AGF_RELEASES_DIR }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Put bun on PATH (user-local install on the server)
+        run: echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+
+      - name: Install dependencies (bun)
+        run: bun install --frozen-lockfile
+
+      - name: Build standalone binaries
+        run: bun run pack:bun
+
+      - name: Show build info
+        run: cat dist-bun/BUILDINFO
+
+      # node_8afe7afda8ae: build-linux-packages.sh (AppImage/.deb) had a real,
+      # tested build script that was never wired into any workflow — no
+      # artifact ever reached a user. continue-on-error is deliberate: this
+      # runner may not have Docker, and a packaging failure must never break
+      # the existing (working) binary release flow above.
+      - name: Build Linux packages (.deb + AppImage)
+        continue-on-error: true
+        run: bash scripts/build-linux-packages.sh all
+
+      - name: Publish binaries to the release channel
+        # Publish ONLY on a release (or manual dispatch). A non-release push still
+        # BUILDS (validation above) but must not overwrite a published asset — in
+        # particular the signed darwin binary (node_51d3c2f4b804).
+        #
+        # Skips cleanly anywhere the secret is absent, so a fork's CI stays green.
+        if: >-
+          github.event_name == 'workflow_dispatch' ||
+          github.event_name == 'release' ||
+          startsWith(github.event.head_commit.message, 'chore(release)')
+        run: |
+          set -euo pipefail
+          if [ -z "${RELEASES_DIR:-}" ] || [ ! -d "$RELEASES_DIR" ]; then
+            echo "::warning::release dir unavailable — skipping publish (not the release host)"
+            exit 0
+          fi
+          cp -f dist-bun/agf-* "$RELEASES_DIR"/
+          cp -f dist-bun/BUILDINFO "$RELEASES_DIR"/BUILDINFO || true
+          echo "--- published $(ls dist-bun/agf-* | wc -l) assets ---"
+
+      # No actions/upload-artifact step here on purpose (node_f7c8e222631a): the
+      # publish step above IS the real distribution, verified against BUILDINFO +
+      # sha256 by the release consistency gate. A CI artifact was pure redundant
+      # weight — every push re-uploaded ~194MB with no
+      # retention-days set, silently accumulating to a hard storage-quota failure
+      # that turned a genuinely successful publish into a false-negative red job.
+
+      # Separate, non-blocking upload: packaging above is best-effort
+      # (continue-on-error), so these files may legitimately not exist.
+      - name: Upload Linux packages (.deb + AppImage)
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: agf-linux-packages
+          path: dist-packages/*
+          if-no-files-found: warn
+
+      - name: Attach binaries to the Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            dist-bun/agf-darwin-arm64 dist-bun/agf-darwin-x64 \
+            dist-bun/agf-linux-x64 dist-bun/agf-linux-arm64 dist-bun/agf-windows-x64.exe \
+            dist-bun/agf-darwin-arm64.sha256 dist-bun/agf-darwin-x64.sha256 \
+            dist-bun/agf-linux-x64.sha256 dist-bun/agf-linux-arm64.sha256 dist-bun/agf-windows-x64.exe.sha256 \
+            --clobber
+
+      # Best-effort: only attempts an upload if the packaging step above
+      # actually produced files (continue-on-error means it may not have).
+      - name: Attach Linux packages to the Release, if built
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          packages=(dist-packages/*.deb dist-packages/*.AppImage)
+          if [ ${#packages[@]} -eq 0 ]; then
+            echo "::warning::No Linux packages built (Docker likely unavailable on this runner) — skipping"
+            exit 0
+          fi
+          gh release upload "${{ github.event.release.tag_name }}" "${packages[@]}" --clobber
