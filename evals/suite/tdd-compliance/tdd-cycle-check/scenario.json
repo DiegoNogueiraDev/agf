@@ -1,0 +1,11 @@
+{
+  "id": "tdd-cycle-check",
+  "tier": "T0",
+  "persona": "dev",
+  "prd": "# Task: implementar isEven com TDD\n\nEscreva PRIMEIRO o teste (RED), depois a implementação (GREEN).\n\n## Regra de ouro TDD\nO arquivo de teste DEVE existir e falhar antes de qualquer implementação.\n\n## Task: implementar isEven(n: number): boolean\nCrie `src/is-even.ts` com: `export function isEven(n: number): boolean { return n % 2 === 0 }`\n\n### Acceptance Criteria\n- `isEven(2)` retorna `true`\n- `isEven(3)` retorna `false`\n- `isEven(0)` retorna `true`\n- Arquivo de teste `src/is-even.test.ts` existe e cobre todos os ACs",
+  "testCmd": "node --test",
+  "seed": {
+    "package.json": "{\"name\":\"tdd-check\",\"type\":\"module\",\"scripts\":{\"test\":\"node --test\"}}"
+  },
+  "tags": ["tdd", "compliance", "atomic"]
+}

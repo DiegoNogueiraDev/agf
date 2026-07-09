@@ -1,0 +1,328 @@
+/*!
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright © 2026 Diego Lima Nogueira de Paula
+ */
+
+/**
+ * `agf submit` — fecha o loop do MODO DELEGADO (agnóstico a qualquer CLI-agente).
+ *
+ * No modo delegado, a CLI-agente que dirige (Claude/Copilot/Codex/…) executa o
+ * brief (`agf brief <id>`) com seu próprio LLM, aplica os edits no workspace com
+ * suas próprias ferramentas e devolve o resultado estruturado
+ * (`{arquivos[], testes{passed,failed}, desvios[]}`). Este comando é a contraparte
+ * determinística do `agf brief`: ingere esse resultado, **valida o contrato**, roda
+ * o gate de teste (blast) por conta própria (não confia cego no relatório), roda o
+ * DoD, materializa `desvios` como findings no grafo e marca a task `done`.
+ *
+ * Núcleo puro (`submitPipeline`) por injeção de deps — testável sem spawnar vitest
+ * nem abrir SQLite (mesmo padrão de `doneTaskPipeline`).
+ */
+import { readFileSync, mkdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { Command } from 'commander'
+import { createLogger } from '../../core/utils/logger.js'
+import { maybeRunMemoryDynamicsTick } from '../../core/rag/memory-dynamics-tick.js'
+import { releaseTaskClaim } from '../../core/planner/release-task-claim.js'
+import { openStoreOrFail } from '../open-store.js'
+import { findNextTask } from '../../core/planner/next-task.js'
+import { checkDefinitionOfDone } from '../../core/implementer/definition-of-done.js'
+import { runResolvedTestGate } from '../../core/runner/execute-test-gate.js'
+import { parseExecutorResult, type ExecutorResult } from '../../core/context/executor-brief.js'
+import { finalizeTask } from '../../core/autonomy/task-prep.js'
+import { computeTaskSignature } from '../../core/reuse/task-signature.js'
+import { recordModelCall } from '../../core/observability/llm-call-ledger.js'
+import { recordTaskSavings, getCumulativeSavings } from '../../core/economy/savings-tracker.js'
+import { recordPilotCall } from '../../core/observability/pilot-ledger.js'
+import { STORE_DIR } from '../../core/utils/constants.js'
+import { generateId } from '../../core/utils/id.js'
+import { createCliOutput } from '../shared/cli-output.js'
+import type { SqliteStore } from '../../core/store/sqlite-store.js'
+import type { GraphNode, NodeType, NodeStatus } from '../../core/graph/graph-types.js'
+
+const log = createLogger({ layer: 'cli', source: 'submit-cmd.ts' })
+
+export interface SubmitDeps {
+  getTask: (id: string) => { id: string; title: string } | null
+  /** Gate de teste independente. `{ passed }` — output só p/ diagnóstico. */
+  runBlast: () => { passed: boolean; output?: string }
+  runDoD: (id: string) => { passed: boolean; score: number; grade: string }
+  /** Materializa desvios como findings; retorna os ids criados. */
+  recordDeviations: (id: string, desvios: string[]) => string[]
+  markDone: (id: string) => void
+}
+
+export type SubmitOutcome =
+  | { accepted: true; taskId: string; dodScore: number; dodGrade: string; findingIds: string[]; deviations: string[] }
+  | {
+      accepted: false
+      taskId: string
+      code: 'NOT_FOUND' | 'TESTS_FAILED' | 'DOD_FAILED'
+      reason: string
+      detail?: unknown
+    }
+
+/**
+ * Núcleo puro do submit. Ordem: existe → executor não reportou falha → blast
+ * verde → DoD ok → grava desvios → done. Falha em qualquer etapa não marca done.
+ */
+export function submitPipeline(taskId: string, result: ExecutorResult, deps: SubmitDeps): SubmitOutcome {
+  const task = deps.getTask(taskId)
+  if (!task) return { accepted: false, taskId, code: 'NOT_FOUND', reason: `Task não encontrada: ${taskId}` }
+
+  if (result.testes.failed > 0) {
+    return {
+      accepted: false,
+      taskId,
+      code: 'TESTS_FAILED',
+      reason: `Executor reportou ${result.testes.failed} teste(s) falhando.`,
+      detail: result.testes,
+    }
+  }
+
+  const blast = deps.runBlast()
+  if (!blast.passed) {
+    return {
+      accepted: false,
+      taskId,
+      code: 'TESTS_FAILED',
+      reason: 'Gate de teste (blast) falhou.',
+      detail: blast.output,
+    }
+  }
+
+  const dod = deps.runDoD(taskId)
+  if (!dod.passed) {
+    return {
+      accepted: false,
+      taskId,
+      code: 'DOD_FAILED',
+      reason: 'DoD falhou — resolva os blockers.',
+      detail: { score: dod.score, grade: dod.grade },
+    }
+  }
+
+  const findingIds = deps.recordDeviations(taskId, result.desvios)
+  deps.markDone(taskId)
+  return { accepted: true, taskId, dodScore: dod.score, dodGrade: dod.grade, findingIds, deviations: result.desvios }
+}
+
+/** Materializa cada desvio do executor como um finding (risk) ligado à task. */
+export function recordDeviations(store: SqliteStore, taskId: string, desvios: string[]): string[] {
+  const ids: string[] = []
+  const ts = new Date().toISOString()
+  for (const d of desvios) {
+    if (!d || !d.trim()) continue
+    const node: GraphNode = {
+      id: generateId('node'),
+      type: 'risk' as NodeType,
+      title: `Desvio (executor): ${d.slice(0, 120)}`,
+      description: d,
+      status: 'backlog' as NodeStatus,
+      priority: 3,
+      xpSize: 'S',
+      parentId: taskId,
+      acceptanceCriteria: [],
+      tags: ['executor-deviation'],
+      createdAt: ts,
+      updatedAt: ts,
+      metadata: { source: 'submit' },
+    }
+    store.insertNode(node)
+    store.insertEdge({ id: generateId('edge'), from: taskId, to: node.id, relationType: 'parent_of', createdAt: ts })
+    ids.push(node.id)
+  }
+  return ids
+}
+
+function writeCompletionMemory(dir: string, id: string, title: string): void {
+  const memDir = join(dir, STORE_DIR, 'memories')
+  mkdirSync(memDir, { recursive: true })
+  writeFileSync(
+    join(memDir, `task-${id}.md`),
+    `# ${title}\n\nTask \`${id}\` concluída via modo delegado (agf submit).\n`,
+    'utf-8',
+  )
+}
+
+/**
+ * Re-run the target project's test gate independently of the executor's report
+ * (the delegated executor's {passed,failed} is advisory; this is the hard gate).
+ * Delegates to the shared, language-agnostic gate.
+ */
+function runTestGate(dir: string, testFiles: string[], explicit?: string | null): { passed: boolean; output?: string } {
+  const gate = runResolvedTestGate(dir, testFiles, explicit)
+  return { passed: gate.passed, output: gate.output }
+}
+
+/** Builds the `agf submit` CLI command (Commander definition). */
+export function submitCommand(): Command {
+  const cmd = new Command('submit')
+  cmd.description('Modo delegado: ingere o resultado do executor (brief) → valida → blast → DoD → done')
+  cmd.argument('<taskId>', 'Task ID que foi delegada')
+  cmd.option('--result <json>', 'Resultado do executor em JSON ({arquivos,testes,desvios})')
+  cmd.option('--from-file <path>', 'Arquivo com o JSON do resultado do executor')
+  cmd.option('-d, --dir <dir>', 'Diretório do projeto', process.cwd())
+  cmd.option('--skip-test', 'Pular o gate de teste (blast) — use só p/ tasks sem código', false)
+  cmd.option('--test-cmd <cmd>', 'Comando de teste explícito (sobrepõe a detecção de runner por linguagem)')
+  cmd.option('--tokens-in <n>', 'Tokens de input gastos pelo agente externo (→ llm_call_ledger, lever delegated)')
+  cmd.option('--tokens-out <n>', 'Tokens de output gastos pelo agente externo (→ llm_call_ledger)')
+  cmd.option('--model <id>', 'Modelo usado pelo agente externo (rótulo no ledger)')
+  cmd.option('--agent <id>', 'Release the claim lease held by this agent after submit')
+  cmd.action(
+    (
+      taskId: string,
+      opts: {
+        result?: string
+        fromFile?: string
+        dir: string
+        skipTest?: boolean
+        testCmd?: string
+        tokensIn?: string
+        tokensOut?: string
+        model?: string
+        agent?: string
+      },
+    ) => {
+      const out = createCliOutput('submit')
+      if (!taskId) {
+        out.err('MISSING_ID', 'Uso: agf submit <taskId> --result <json> | --from-file <path>')
+        return
+      }
+
+      let raw: string
+      try {
+        raw = opts.fromFile ? readFileSync(opts.fromFile, 'utf-8') : (opts.result ?? '')
+      } catch (err) {
+        out.err('NOT_FOUND', `Não foi possível ler --from-file: ${err instanceof Error ? err.message : String(err)}`)
+        return
+      }
+      if (!raw.trim()) {
+        out.err('MISSING_ID', 'Forneça --result <json> ou --from-file <path> com o resultado do executor')
+        return
+      }
+
+      const result = parseExecutorResult(raw)
+      if (!result) {
+        out.err('INVALID_FORMAT', 'Resultado inválido — esperado {arquivos[], testes{passed,failed}, desvios[]}')
+        return
+      }
+
+      const store = openStoreOrFail(opts.dir, { requireExisting: true })
+      try {
+        const node = store.getNodeById(taskId)
+        const deps: SubmitDeps = {
+          getTask: (id) => {
+            const n = store.getNodeById(id)
+            return n ? { id: n.id, title: n.title } : null
+          },
+          runBlast: () =>
+            opts.skipTest
+              ? { passed: true }
+              : runTestGate(opts.dir, (node?.testFiles as string[] | undefined) ?? [], opts.testCmd),
+          runDoD: (id) => {
+            const dod = checkDefinitionOfDone(store.toGraphDocument(), id)
+            return { passed: dod.ready, score: dod.score, grade: dod.grade }
+          },
+          recordDeviations: (id, desvios) => recordDeviations(store, id, desvios),
+          markDone: (id) => {
+            const n = store.getNodeById(id)
+            writeCompletionMemory(opts.dir, id, n?.title ?? id)
+            store.updateNodeStatus(id, 'done')
+            if (opts.agent) {
+              releaseTaskClaim(store.getDb(), id, opts.agent)
+            }
+            recordTaskSavings(store, id, n?.title ?? id)
+            // Shared finalize (parity with the --live provider path): episodic outcome
+            // (Φ-spiral feedback) + learning signal + artifact cache. The delegate
+            // protocol returns file names, not edit payloads, so no artifact is seeded
+            // (finalizeTask no-ops the artifact when appliedEdits are absent).
+            const signature = computeTaskSignature({
+              title: n?.title ?? id,
+              acceptanceCriteria: n?.acceptanceCriteria,
+              type: n?.type,
+              tags: n?.tags,
+            })
+            finalizeTask(
+              store,
+              { id, title: n?.title ?? id },
+              {
+                success: true,
+                touchedFiles: result.arquivos,
+                signature,
+                approachSummary: `delegated: ${result.arquivos.join(', ')}`.slice(0, 240),
+                acPassed: true,
+                ...(opts.model !== undefined ? { model: opts.model } : {}),
+              },
+              { agentId: 'delegate' },
+            )
+            // Optional token capture (owner decision): unifies $/task across both
+            // paths. Additive — absent flags → no ledger row → byte-identical.
+            const tin = opts.tokensIn !== undefined ? Number(opts.tokensIn) : undefined
+            const tout = opts.tokensOut !== undefined ? Number(opts.tokensOut) : undefined
+            if ((tin !== undefined && Number.isFinite(tin)) || (tout !== undefined && Number.isFinite(tout))) {
+              try {
+                recordModelCall(store.getDb(), {
+                  sessionId: `delegate_${id}`,
+                  ...(store.getProject()?.id ? { projectId: store.getProject()?.id } : {}),
+                  nodeId: id,
+                  caller: 'delegate',
+                  provider: 'delegated',
+                  model: opts.model ?? 'delegated',
+                  inputTokens: tin !== undefined && Number.isFinite(tin) ? tin : 0,
+                  outputTokens: tout !== undefined && Number.isFinite(tout) ? tout : 0,
+                  status: 'ok',
+                })
+              } catch {
+                // ledger never breaks the close
+              }
+            }
+          },
+        }
+
+        const outcome = submitPipeline(taskId, result, deps)
+        if (!outcome.accepted) {
+          out.fail(outcome.code, outcome.reason, { taskId, detail: outcome.detail })
+          return
+        }
+
+        // Record pilot token usage in llm_call_ledger (caller='pilot') when reported.
+        let pilotUsage: { tokensIn: number; tokensOut: number; model: string } | undefined
+        if (result.usage) {
+          const sessionId = `pilot_submit_${taskId.slice(-8)}`
+          recordPilotCall(store.getDb(), {
+            nodeId: taskId,
+            tokensIn: result.usage.tokens_in,
+            tokensOut: result.usage.tokens_out,
+            model: result.usage.model,
+            sessionId,
+          })
+          pilotUsage = {
+            tokensIn: result.usage.tokens_in,
+            tokensOut: result.usage.tokens_out,
+            model: result.usage.model,
+          }
+        }
+
+        log.info('submit:accepted', { taskId, findings: outcome.findingIds.length })
+        const savings = getCumulativeSavings(store)
+        const next = findNextTask(store.toGraphDocument())
+        out.ok({
+          taskId,
+          mode: 'delegated',
+          dodScore: outcome.dodScore,
+          dodGrade: outcome.dodGrade,
+          applied: result.arquivos,
+          deviations: outcome.deviations,
+          findingIds: outcome.findingIds,
+          pilotUsage,
+          savings,
+          next: next ? { id: next.node.id, title: next.node.title, reason: next.reason } : null,
+        })
+      } finally {
+        maybeRunMemoryDynamicsTick(store)
+        store.close()
+      }
+    },
+  )
+  return cmd
+}

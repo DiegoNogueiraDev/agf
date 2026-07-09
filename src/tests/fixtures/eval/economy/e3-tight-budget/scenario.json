@@ -1,0 +1,10 @@
+{
+  "id": "e3-tight-budget",
+  "tier": "S",
+  "persona": "dev",
+  "prd": "Add a pure function `truncateToTokenBudget(text: string, maxTokens: number): string` to src/core/economy/truncate-to-budget.ts that approximates token count as `Math.ceil(text.length / 4)` and truncates (with a '…' suffix) if over budget. Return the full string if within budget. Write a unit test.",
+  "testCmd": "echo 'simulate:ok'",
+  "tokenBudget": 1000,
+  "expectedResolve": false,
+  "tags": ["economy", "truncation", "tight-budget"]
+}

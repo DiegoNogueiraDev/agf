@@ -1,0 +1,10 @@
+{
+  "id": "p1-graph-crud",
+  "tier": "S",
+  "persona": "product",
+  "prd": "You are an autonomous agent using the agent-graph-flow (agf) CLI to manage a software project graph.\n\nYour task:\n1. Initialize a new agf project in the current directory: run `agf init --silent` (or `agf init` if --silent is not available)\n2. Add a task node titled 'eval-crud-demo' of type 'task' with priority 2\n3. Verify the node was created by running `agf node show <id>` with the ID from step 2\n4. Confirm `agf query --search 'eval-crud-demo'` returns the node\n5. Write the node ID to a file named `node-id.txt`\n\nThe task is complete when: node-id.txt exists, contains a node ID (starts with 'node_'), and `agf query` confirms the node is in the graph.",
+  "testCmd": "cat node-id.txt 2>/dev/null | grep -E '^node_[a-f0-9]+' | head -1 | wc -c | awk '{exit ($1 < 5) ? 1 : 0}'",
+  "tags": ["product-relevant", "graph-crud", "cli", "agf"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

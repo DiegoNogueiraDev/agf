@@ -1,0 +1,9 @@
+[[filters]]
+name = "basedpyright"
+priority = 30
+detect = ["Pyright", "pyright", "error:", "warning:", "Information:"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 200
+on_empty = "no type errors"

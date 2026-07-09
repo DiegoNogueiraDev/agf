@@ -1,0 +1,9 @@
+[[filters]]
+name = "ruff"
+priority = 32
+detect = ["ruff", "Found \\d+ error", "\\d+ fixable", "\\S+.py:\\d+:\\d+:"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 300
+on_empty = "no lint errors"

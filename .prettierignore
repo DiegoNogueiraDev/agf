@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+workflow-graph/
+docs/parity-report.json
+package-lock.json
+*.log
+.env
+.env.*

@@ -1,0 +1,8 @@
+[[filters]]
+name = "ssh"
+priority = 60
+detect = ["ssh:", "Permission denied", "Connection refused", "Connection closed", "authenticity of host"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 30

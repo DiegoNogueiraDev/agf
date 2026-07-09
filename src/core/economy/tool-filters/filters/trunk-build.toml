@@ -1,0 +1,9 @@
+[[filters]]
+name = "trunk-build"
+priority = 50
+detect = ["trunk build", "Finished", "Compiling", "cargo build"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  Compiling", "^  Finished"]
+max_lines = 50

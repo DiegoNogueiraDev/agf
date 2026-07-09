@@ -1,0 +1,8 @@
+[[filters]]
+name = "fail2ban-client"
+priority = 60
+detect = ["Status", "Banned", "fail2ban"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 50

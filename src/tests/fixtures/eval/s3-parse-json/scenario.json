@@ -1,0 +1,9 @@
+{
+  "id": "s3-parse-json",
+  "tier": "S",
+  "prd": "Write `parseJsonSafe<T>(input: string): T | null` that returns null on invalid JSON instead of throwing. Export from src/utils/parse-json.ts. AC: returns null for 'not-json'.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["utility", "json", "simple"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

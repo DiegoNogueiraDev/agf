@@ -1,0 +1,10 @@
+[[filters]]
+name = "prisma"
+priority = 50
+detect = ["Prisma", "prisma", "Datasource", "Generated", "migrate", "environment variables"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100
+on_empty = "already up to date"

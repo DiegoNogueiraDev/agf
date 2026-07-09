@@ -1,0 +1,9 @@
+# curl — compact HTTP response, JSON auto-detection
+[[filters]]
+name = "curl"
+priority = 70
+detect = ["HTTP/", "<html", "<!DOCTYPE", "^{", "^\\["]
+
+[filters.pipeline]
+strip_ansi = true
+head_lines = 300
