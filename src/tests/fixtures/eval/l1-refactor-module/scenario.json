@@ -1,0 +1,9 @@
+{
+  "id": "l1-refactor-module",
+  "tier": "L",
+  "prd": "Refactor the token cost calculation into a standalone module `src/core/observability/token-cost.ts` with: `computeCost(model: string, tokIn: number, tokOut: number): CostResult` where CostResult = { inputUsd, outputUsd, totalUsd }. Extract pricing from cost-tracker.ts. AC: existing cost-tracker.ts still works; new module exports CostResult type; unit tests cover Haiku and Sonnet pricing.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["refactor", "observability", "large"],
+  "tokenBudget": 20000,
+  "expectedResolve": true
+}

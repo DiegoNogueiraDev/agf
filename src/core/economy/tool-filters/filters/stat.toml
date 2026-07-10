@@ -1,0 +1,9 @@
+[[filters]]
+name = "stat"
+priority = 60
+detect = ["File:", "Size:", "Blocks:", "IO Block", "Device:", "Inode:", "Access:"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 20

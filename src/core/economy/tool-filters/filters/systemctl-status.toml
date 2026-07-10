@@ -1,0 +1,8 @@
+[[filters]]
+name = "systemctl-status"
+priority = 60
+detect = ["systemctl", "Loaded:", "Active:", "Main PID:", "Status:", "since"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 30

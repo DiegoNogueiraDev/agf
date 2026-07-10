@@ -1,0 +1,121 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  actions: write
+
+jobs:
+  release-please:
+    runs-on: [self-hosted]
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created || startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Cache npm global packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.npm
+          key: npm-cache-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            npm-cache-${{ runner.os }}-
+
+      - name: Cache node_modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Cross-platform binaries built on NATIVE runners — so darwin is signed on real
+  # macOS (Apple Silicon + Intel) instead of cross-compiled unsigned on Linux — and
+  # attached to the GitHub Release with checksums. See node_e0fa8a909d79.
+  binaries:
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-14, target: darwin-arm64, out: agf-darwin-arm64 }
+          - { os: macos-13, target: darwin-x64, out: agf-darwin-x64 }
+          - { os: ubuntu-24.04, target: linux-x64, out: agf-linux-x64 }
+          - { os: ubuntu-24.04-arm, target: linux-arm64, out: agf-linux-arm64 }
+          - { os: windows-2022, target: windows-x64, out: agf-windows-x64.exe }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.0.2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build native target (signs darwin on macOS)
+        run: bun run pack:bun:host
+
+      - name: Compute sha256 checksum
+        shell: bash
+        run: |
+          cd dist-bun
+          shasum -a 256 "${{ matrix.out }}" > "${{ matrix.out }}.sha256"
+
+      - name: Attach binary + checksum to the GitHub Release
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
+        with:
+          files: |
+            dist-bun/${{ matrix.out }}
+            dist-bun/${{ matrix.out }}.sha256

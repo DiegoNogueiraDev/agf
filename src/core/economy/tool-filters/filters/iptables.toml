@@ -1,0 +1,8 @@
+[[filters]]
+name = "iptables"
+priority = 60
+detect = ["Chain", "target", "prot", "opt", "source", "destination"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 50

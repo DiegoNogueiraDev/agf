@@ -1,0 +1,10 @@
+[[filters]]
+name = "gcc"
+priority = 50
+detect = ["warning:", "error:", "In file included from", "cc1:"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  "]
+max_lines = 200
+on_empty = "no warnings or errors"

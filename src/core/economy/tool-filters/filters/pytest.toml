@@ -1,0 +1,12 @@
+# pytest — failures only, strip PASSED dots, keep summary
+[[filters]]
+name = "pytest"
+priority = 40
+detect = ["=+ test session starts", "collected \\d+ item", "FAILED", "PASSED", "ERRORS"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^[.sFx]+$", "^=+ \\d+ passed"]
+replace = [["FAILED (.+)", "FAIL: $1"], ["ERRORS (.+)", "ERR: $1"]]
+max_lines = 200
+on_empty = "all tests passed"
