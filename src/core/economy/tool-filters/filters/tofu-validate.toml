@@ -1,0 +1,9 @@
+[[filters]]
+name = "tofu-validate"
+priority = 50
+detect = ["Success!", "Error:", "OpenTofu validation"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 100
+on_empty = "configuration is valid"

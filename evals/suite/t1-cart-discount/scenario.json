@@ -1,0 +1,8 @@
+{
+  "id": "t1-cart-discount",
+  "tier": "T1",
+  "persona": "dev",
+  "prd": "# Task: desconto no carrinho\n\n## Task: adicionar discountedTotal(pct) ao Cart\nNo arquivo `cart.js` existe a classe `Cart` com `add(price)` e `total()`. Adicione o método `discountedTotal(pct)` que retorna o total com `pct`% de desconto: `total() * (1 - pct/100)`. Não quebre os métodos existentes.\n\n### Acceptance Criteria\n- Com dois itens de 100, `discountedTotal(10)` retorna `180`\n- `discountedTotal(0)` retorna o total cheio",
+  "testCmd": "node --test",
+  "tags": ["feature", "read-context"]
+}

@@ -1,0 +1,9 @@
+[[filters]]
+name = "spring-boot"
+priority = 50
+detect = ["Spring Boot", "spring-boot", "APPLICATION FAILED", "Started Application"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  ", "com.", "org.springframework"]
+max_lines = 150

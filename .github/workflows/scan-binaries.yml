@@ -1,0 +1,44 @@
+# Daily binary scan — publishes SCANINFO.json (release-trust artifact) next to
+# BUILDINFO next to the built binaries. Runs on the self-hosted release host, the
+# only machine that can read the published binaries in place. VirusTotal is
+# optional: without VT_API_KEY the verdict falls back to checksum+signature (never fails).
+name: scan-binaries
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # daily 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  scan-binaries:
+    name: scan-binaries (publish SCANINFO to the GitHub Release)
+    # Self-hosted only: the binaries it scans live on this host's release dir.
+    # Where no such runner exists (a public mirror), the scan simply never runs.
+    if: vars.AGF_RUNNER_LABELS != ''
+    runs-on: ${{ fromJSON(vars.AGF_RUNNER_LABELS) }}
+    env:
+      # Path kept out of the public tree — see package-bun.yml.
+      RELEASES_DIR: ${{ secrets.AGF_RELEASES_DIR || 'dist-bun' }}
+      VT_API_KEY: ${{ secrets.VT_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Put bun on PATH
+        run: echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Scan published binaries → write SCANINFO.json
+        run: |
+          if [ ! -d "$RELEASES_DIR" ] || [ ! -f "$RELEASES_DIR/BUILDINFO" ]; then
+            echo "::warning::$RELEASES_DIR/BUILDINFO absent — skipping (no build in this run)"
+            exit 0
+          fi
+          bun src/cli/index.ts scan-binaries --out "$RELEASES_DIR"
+          echo "--- published SCANINFO.json ---"
+          cat "$RELEASES_DIR/SCANINFO.json"

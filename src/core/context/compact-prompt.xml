@@ -1,0 +1,26 @@
+<compact-prompt>
+  <current_focus>
+    <!-- What is being worked on right now? Task ID, title, status -->
+  </current_focus>
+  <environment>
+    <!-- Runtime details: Node version, OS, relevant env vars -->
+  </environment>
+  <completed_tasks>
+    <!-- List of done tasks with IDs and brief results -->
+    <task id="">...</task>
+  </completed_tasks>
+  <active_issues>
+    <!-- Blockers, open dependencies, failing tests, warnings -->
+    <issue severity="">...</issue>
+  </active_issues>
+  <code_state>
+    <!-- Modified files with summary of changes -->
+    <file path="">
+      <summary>...</summary>
+      <changes>...</changes>
+    </file>
+  </code_state>
+  <important_context>
+    <!-- Information that must survive compaction: ACs, decisions, invariants -->
+  </important_context>
+</compact-prompt>

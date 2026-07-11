@@ -1,0 +1,6 @@
+{
+  "name": "react-devtools-core",
+  "version": "0.0.0-stub",
+  "description": "No-op stub — agf's standalone binary never runs with DEV=true, so ink's conditional devtools import is dead code here. Real react-devtools-core is a devDependency-only optional peer of ink; this stub keeps `bun build --compile` from needing runtime resolution of a package that isn't shipped in the binary.",
+  "main": "index.js"
+}

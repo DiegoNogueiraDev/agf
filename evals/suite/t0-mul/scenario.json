@@ -1,0 +1,8 @@
+{
+  "id": "t0-mul",
+  "tier": "T0",
+  "persona": "dev",
+  "prd": "# Task: implementar mul\n\n## Task: implementar mul(a, b)\nAdicione `exports.mul = (a, b) => a * b` em `math.js` (multiplicação de inteiros).\n\n### Acceptance Criteria\n- `mul(2, 3)` retorna `6`\n- `mul(0, 5)` retorna `0`",
+  "testCmd": "node --test",
+  "tags": ["math", "atomic"]
+}

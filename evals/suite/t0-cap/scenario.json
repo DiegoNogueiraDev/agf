@@ -1,0 +1,8 @@
+{
+  "id": "t0-cap",
+  "tier": "T0",
+  "persona": "dev",
+  "prd": "# Task: implementar capitalize\n\n## Task: implementar capitalize(s)\nAdicione `exports.capitalize = (s) => s[0].toUpperCase() + s.slice(1)` em `hello.js` (primeira letra maiúscula).\n\n### Acceptance Criteria\n- `capitalize('hello')` retorna `'Hello'`\n- `capitalize('world')` retorna `'World'`\n- `capitalize('a')` retorna `'A'`",
+  "testCmd": "node --test",
+  "tags": ["string", "atomic"]
+}

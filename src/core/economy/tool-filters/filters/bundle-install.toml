@@ -1,0 +1,10 @@
+[[filters]]
+name = "bundle-install"
+priority = 50
+detect = ["Bundle", "bundle install", "Gemfile", "Fetching", "Installing", "Bundle complete"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^Fetching"]
+max_lines = 50
+on_empty = "gems up to date"

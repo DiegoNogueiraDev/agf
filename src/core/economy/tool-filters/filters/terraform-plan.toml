@@ -1,0 +1,11 @@
+# terraform plan — compact: keep resource changes, strip noise
+[[filters]]
+name = "terraform-plan"
+priority = 50
+detect = ["Terraform will perform", "Plan:", "No changes"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^Reading...", "^Refreshing state"]
+replace = [["\\s+=>\\s+", " → "]]
+max_lines = 400

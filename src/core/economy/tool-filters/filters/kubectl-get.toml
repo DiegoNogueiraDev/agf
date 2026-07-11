@@ -1,0 +1,10 @@
+# kubectl get — compact table output
+[[filters]]
+name = "kubectl-get"
+priority = 60
+detect = ["NAME\\s+", "READY\\s+STATUS", "RESTARTS\\s+AGE"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 150
+max_lines = 80
