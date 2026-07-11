@@ -1,0 +1,8 @@
+[[filters]]
+name = "mix-format"
+priority = 50
+detect = ["mix format", "Formatted"]
+
+[filters.pipeline]
+strip_ansi = true
+on_empty = "all files formatted"

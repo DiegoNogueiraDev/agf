@@ -1,0 +1,9 @@
+{
+  "id": "m3-build-pipeline",
+  "tier": "M",
+  "prd": "Implement `processPipeline<T, U>(items: T[], ...stages: Array<(x: T) => U>): U[]` that passes each item through all stage functions sequentially. Export from src/utils/pipeline.ts. AC: stages applied in order; returns array of final values.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["pipeline", "functional", "medium"],
+  "tokenBudget": 10000,
+  "expectedResolve": true
+}

@@ -1,0 +1,11 @@
+[[filters]]
+name = "cargo-build"
+priority = 41
+detect = ["Compiling", "error\\[E", "warning\\[", "aborting due to", "For more information", "Finished "]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  Compiling", "^  Finished"]
+keep_lines = ["^error\\[", "^warning\\[", "^   -->", "^    =", "^  = note", "aborting due to", "error: could not compile", "For more information"]
+max_lines = 200
+on_empty = "build succeeded"

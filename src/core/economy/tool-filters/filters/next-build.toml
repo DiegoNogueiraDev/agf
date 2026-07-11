@@ -1,0 +1,9 @@
+[[filters]]
+name = "next-build"
+priority = 50
+detect = ["Lambda", "Create route", "Route", "next build", "next-env", "✓", "▲"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  Creating", "^  Generating"]
+max_lines = 200

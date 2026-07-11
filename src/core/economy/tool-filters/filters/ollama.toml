@@ -1,0 +1,9 @@
+[[filters]]
+name = "ollama"
+priority = 60
+detect = ["NAME", "ID", "SIZE", "MODIFIED", "pull", "pulling"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 30

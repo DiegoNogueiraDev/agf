@@ -1,0 +1,8 @@
+[[filters]]
+name = "sops"
+priority = 60
+detect = ["sops", "encrypted", "decrypted", "SOPS"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 30

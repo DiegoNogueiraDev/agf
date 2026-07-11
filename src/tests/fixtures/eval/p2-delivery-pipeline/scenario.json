@@ -1,0 +1,10 @@
+{
+  "id": "p2-delivery-pipeline",
+  "tier": "M",
+  "persona": "product",
+  "prd": "You are an autonomous agent using the agent-graph-flow (agf) CLI to deliver a software feature through the full graph lifecycle.\n\nYour task (full delivery pipeline):\n1. Initialize agf in this workspace: `agf init --silent` (or `agf init`)\n2. Import a minimal PRD: write a file named 'feature.md' with content '# Add clamp utility\\n\\nCreate a function clamp(v, min, max) that clamps v between min and max.', then run `agf import-prd feature.md`\n3. Pull the next task: run `agf next` and note the task ID\n4. Start the task: run `agf node status <id> in_progress`\n5. Implement the feature: create `src/clamp.ts` with the clamp function and `src/clamp.test.ts` with at least 2 tests\n6. Mark done: run `agf node status <id> done`\n7. Write the task ID to `task-id.txt`\n\nThe task is complete when: task-id.txt exists with a node ID, src/clamp.ts exists with a clamp function, and src/clamp.test.ts exists with tests.",
+  "testCmd": "test -f task-id.txt && test -f src/clamp.ts && test -f src/clamp.test.ts && grep -q 'clamp' src/clamp.ts",
+  "tags": ["product-relevant", "delivery-pipeline", "tdd", "full-lifecycle", "agf"],
+  "tokenBudget": 10000,
+  "expectedResolve": true
+}

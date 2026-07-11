@@ -1,0 +1,9 @@
+{
+  "id": "m2-extend-schema",
+  "tier": "M",
+  "prd": "Extend the existing EvalScore schema (src/core/economy/eval-rubric.ts) with an optional `hallucination_detail` field (array of strings). Update the Zod schema and type. Add tests verifying the field is optional. AC: existing code without the field still validates.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["schema", "extension", "medium"],
+  "tokenBudget": 10000,
+  "expectedResolve": true
+}

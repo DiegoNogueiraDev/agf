@@ -1,0 +1,9 @@
+[[filters]]
+name = "skopeo"
+priority = 50
+detect = ["skopeo", "Copying", "Writing", "Manifest"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 30
