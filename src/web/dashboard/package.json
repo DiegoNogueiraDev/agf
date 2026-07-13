@@ -12,7 +12,7 @@
     "@dagrejs/dagre": "^3.0.0",
     "@tanstack/react-virtual": "^3.13.23",
     "elkjs": "^0.11.1",
-    "@xyflow/react": "^12.8.2",
+    "@xyflow/react": "^12.11.2",
     "lucide-react": "^1.14.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
