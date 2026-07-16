@@ -1,0 +1,5 @@
+[[rules]]
+type = "prefix"
+value = "danger-tool"
+decision = "Forbidden"
+justification = "flagged as destructive by policy"

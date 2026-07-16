@@ -1,0 +1,10 @@
+{
+  "id": "p3-harness-quality",
+  "tier": "S",
+  "persona": "product",
+  "prd": "You are an autonomous agent using the agent-graph-flow (agf) CLI to assess and improve project quality.\n\nYour task:\n1. Initialize a new agf project: run `agf init --silent` (or `agf init`)\n2. Run `agf harness` to assess the project quality\n3. The harness will report a grade and score \u2014 write the grade to a file named `harness-grade.txt`\n4. Create a task in the graph to address quality: run `agf node add --title 'Improve test coverage' --type task --priority 2`\n5. Write the created task ID to a file named `task-id.txt`\n\nThe task is complete when: harness-grade.txt contains a letter grade (A, B, C, or D), and task-id.txt contains a valid task node ID (starts with 'node_').",
+  "testCmd": "test -f harness-grade.txt && grep -qE '^[ABCD]$' harness-grade.txt && test -f task-id.txt && grep -qE '^node_[a-f0-9]+' task-id.txt",
+  "tags": ["product-relevant", "harness", "quality", "workflow", "agf"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

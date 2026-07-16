@@ -1,0 +1,162 @@
+@import 'tailwindcss';
+
+/* ── Breakpoints Reference ──
+   sm: 640px   (mobile landscape)
+   md: 768px   (tablet)
+   lg: 1024px  (desktop)
+   xl: 1440px  (wide desktop)
+   ────────────────────────── */
+
+@theme {
+  /* ── Brand (warm palette — amber accent) ── */
+  --color-accent: #e7a44b;
+  --color-accent-light: #f0b860;
+
+  /* ── Semantic (warm-harmonized) ── */
+  --color-success: #86b86a;
+  --color-warning: #d97a35;
+  --color-danger: #e08a5a;
+  --color-info: #c9a468;
+
+  /* ── Surfaces (light = kraft / cream paper) ── */
+  --color-surface: #f7f1e2;
+  --color-surface-alt: #f0ead9;
+  --color-surface-elevated: #e3d8bf;
+  --color-background: #f7f1e2;
+
+  /* ── Text ── */
+  --color-foreground: #3a3122;
+  --color-muted: #6f6552;
+
+  /* ── Border ── */
+  --color-edge: #ddd0b4;
+
+  /* ── Node types (kept distinct; warmed where it clashed) ── */
+  --color-node-epic: #8b5cf6;
+  --color-node-task: #4a90b8;
+  --color-node-subtask: #86b86a;
+  --color-node-requirement: #e7a44b;
+  --color-node-constraint: #e08a5a;
+  --color-node-milestone: #a78bce;
+  --color-node-acceptance: #4fa39a;
+  --color-node-risk: #d97a35;
+  --color-node-decision: #c97a92;
+
+  /* ── Status ── */
+  --color-status-done: #86b86a;
+  --color-status-in_progress: #4a90b8;
+  --color-status-blocked: #e08a5a;
+  --color-status-ready: #e7a44b;
+  --color-status-backlog: #9a8f78;
+}
+
+/* Dark = warm coffee/kraft theme */
+.dark {
+  --color-surface: #3a3122;
+  --color-surface-alt: #322a1d;
+  --color-surface-elevated: #4a4030;
+  --color-background: #2a2317;
+  --color-foreground: #f0ead9;
+  --color-muted: #a89d85;
+  --color-edge: #5c5240;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+/* React Flow overrides */
+.react-flow__node {
+  font-size: 12px;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-edge);
+  border-radius: 3px;
+}
+
+/* ── Fullscreen fallback (when native API unavailable) ── */
+.fullscreen-fallback {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 50 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: var(--color-background) !important;
+}
+
+/* ── Focus management (accessibility) ── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Drawer slide-in animation ── */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 200ms ease-out;
+}
+
+/* ── Global interactivity ── */
+button,
+[role='tab'],
+[role='button'],
+a {
+  cursor: pointer;
+}

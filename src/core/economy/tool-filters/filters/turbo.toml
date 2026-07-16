@@ -1,0 +1,9 @@
+[[filters]]
+name = "turbo"
+priority = 50
+detect = ["turbo", "turbo build", "turbo dev", "• Packages"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 200

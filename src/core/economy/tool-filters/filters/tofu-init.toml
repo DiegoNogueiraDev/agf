@@ -1,0 +1,10 @@
+[[filters]]
+name = "tofu-init"
+priority = 50
+detect = ["Initializing", "OpenTofu initialized", "Terraform has been successfully initialized"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^Initializing"]
+max_lines = 50
+on_empty = "already initialized"
