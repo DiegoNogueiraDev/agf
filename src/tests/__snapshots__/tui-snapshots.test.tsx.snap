@@ -1,0 +1,73 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App snapshot > renderiza dashboard com tasks ativas 1`] = `
+"╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ agent-graph-flow · demo · fase IMPLEMENT · modelo claude-sonnet-4.6 · WIP 1                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+ ⛁ 1500 tok · $0.0030 · claude-sonnet-4.6
+
+Tasks ativas (2/5):
+  ● in_progress  Task In Progress
+  ○ ready        Task Ready
+
+Tokens: 1500 (in 1000 / out 500) ≈ $0.0030 · 3 chamada(s)
+
+/help para comandos · /quit ou Ctrl+C para sair"
+`;
+
+exports[`App snapshot > renderiza dashboard sem tasks 1`] = `
+"╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ agent-graph-flow · demo · fase IMPLEMENT · modelo claude-sonnet-4.6 · WIP 1                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+ ⛁ 1500 tok · $0.0030 · claude-sonnet-4.6
+
+Tasks ativas (0/0):
+ (nenhuma task ativa)
+
+Tokens: 1500 (in 1000 / out 500) ≈ $0.0030 · 3 chamada(s)
+
+/help para comandos · /quit ou Ctrl+C para sair"
+`;
+
+exports[`CommandPalette snapshot > renderiza palette visivel com comandos 1`] = `""`;
+
+exports[`DiffPanel snapshot > renderiza diff com linhas 1`] = `
+"
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Diff (1 arquivo)                                                                                 │
+│ src/file1.ts                                                                                     │
+│ + const x = 1                                                                                    │
+│ - const y = 2                                                                                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘"
+`;
+
+exports[`DiffPanel snapshot > renderiza estado vazio 1`] = `
+"
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Nenhuma edicao registrada ainda.                                                                 │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘"
+`;
+
+exports[`FooterBar snapshot > renderiza com props minimas 1`] = `
+" ^P Palette / Cmd ⇥ Next ⎋ Back Q Quit
+────────────────────────────────────────────────────────────────────────────────────────────────────"
+`;
+
+exports[`FooterBar snapshot > renderiza com todas props 1`] = `
+" ^PPalette /Cmd ⇥Next ⎋Back QQuit →Implement  /n  Next:            mode:       Score: A    ~1500
+                                   X              Implement X      EXECUTE     (85)        tok
+────────────────────────────────────────────────────────────────────────────────────────────────────"
+`;
+
+exports[`GraphTree snapshot > renderiza arvore com nodes 1`] = `
+" ▼ ◐ Epic 1 epic-1
+     · Task 1 n1
+     ● Task 2 n2"
+`;
+
+exports[`KanbanBoard snapshot > renderiza kanban board match snapshot 1`] = `
+"┌─────────────────┐ ┌───────────────┐ ┌──────────────────────┐ ┌─────────────────┐ ┌──────────────┐
+│ Backlog (1)     │ │ Ready (1)     │ │ In Progress (1)      │ │ Blocked (1)     │ │ Done (1)     │
+│ · Task Backlog  │ │ ○ Task Ready  │ │ ● Task In Progress   │ │ ▲ Task Blocked  │ │ ✓ Task Done  │
+└─────────────────┘ └───────────────┘ └──────────────────────┘ └─────────────────┘ └──────────────┘"
+`;

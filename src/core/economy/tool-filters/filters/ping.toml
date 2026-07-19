@@ -1,0 +1,9 @@
+[[filters]]
+name = "ping"
+priority = 60
+detect = ["PING", "bytes from", "packets transmitted", "rtt "]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 20

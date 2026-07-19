@@ -1,0 +1,8 @@
+{
+  "id": "t4-user-preferences",
+  "tier": "T4",
+  "persona": "product",
+  "prd": "# Task: preferências do usuário\n\n## Task: criar prefs.js com getPrefs/setPrefs\n\nCrie `prefs.js` na raiz exportando:\n- `getPrefs(userId)` — retorna preferências. Usuários novos recebem default `{ theme: 'light', lang: 'en' }`.\n- `setPrefs(userId, partial)` — merge parcial. `partial` pode ter só alguns campos.\n\nUse CommonJS (`module.exports` / `require`). Não use classes.\n\n### Acceptance Criteria\n- `getPrefs('user-1')` retorna `{ theme: 'light', lang: 'en' }`\n- `setPrefs('user-2', { theme: 'dark' })` + `getPrefs('user-2')` retorna `{ theme: 'dark', lang: 'en' }`\n- Merge: `setPrefs('user-3', { lang: 'es' })` preserva `theme: 'light'`",
+  "testCmd": "node --test",
+  "tags": ["state-management", "merge", "crud"]
+}

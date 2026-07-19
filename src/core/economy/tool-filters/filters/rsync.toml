@@ -1,0 +1,9 @@
+[[filters]]
+name = "rsync"
+priority = 60
+detect = ["sending incremental file list", "sent ", "received ", "total size"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 50

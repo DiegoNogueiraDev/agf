@@ -1,0 +1,10 @@
+[[filters]]
+name = "mix-compile"
+priority = 50
+detect = ["Compiling", "Generated", "mix compile"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100
+on_empty = "compiled successfully"

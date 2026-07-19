@@ -1,0 +1,12 @@
+# npm install — strip progress, keep added/removed packages + errors
+[[filters]]
+name = "npm-install"
+priority = 50
+detect = ["added \\d+ package", "removed \\d+ package", "up to date", "npm (warn|error|ERR!)"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^\\s*$"]
+keep_lines = ["^(added|removed|changed|audited) \\d+", "^npm (warn|error|ERR!)", "^found \\d+ vulnerabilit"]
+max_lines = 50
+on_empty = "packages up to date"

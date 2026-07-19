@@ -1,0 +1,9 @@
+[[filters]]
+name = "markdownlint"
+priority = 32
+detect = ["MD\\d{3}", "markdownlint"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 100
+on_empty = "no markdown issues"

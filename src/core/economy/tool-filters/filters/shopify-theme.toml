@@ -1,0 +1,9 @@
+[[filters]]
+name = "shopify-theme"
+priority = 50
+detect = ["shopify", "theme", "Uploading", "Processing"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100

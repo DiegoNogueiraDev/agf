@@ -1,0 +1,9 @@
+[[filters]]
+name = "ps"
+priority = 60
+detect = ["PID", "TTY", "TIME", "CMD", "COMMAND"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 30
