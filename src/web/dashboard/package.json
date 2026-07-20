@@ -15,7 +15,7 @@
     "@xyflow/react": "^12.8.2",
     "lucide-react": "^1.14.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.7",
