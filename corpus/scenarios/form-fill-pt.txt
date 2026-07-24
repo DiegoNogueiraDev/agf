@@ -1,0 +1,4 @@
+acesse https://example.com/cadastro
+preencha "maria@example.com" no campo de email
+clique em Enviar
+espero estar em https://example.com/obrigado

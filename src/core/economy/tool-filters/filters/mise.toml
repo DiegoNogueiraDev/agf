@@ -1,0 +1,9 @@
+[[filters]]
+name = "mise"
+priority = 50
+detect = ["mise", "Installed", "Activated"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 50

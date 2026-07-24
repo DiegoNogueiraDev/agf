@@ -1,0 +1,9 @@
+[[filters]]
+name = "gcloud"
+priority = 60
+detect = ["gcloud", "Listable field", "PROJECT:", "ACCOUNT:"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 150
+max_lines = 200

@@ -1,0 +1,9 @@
+{
+  "id": "delivery-pipeline",
+  "tier": "T2",
+  "persona": "dev",
+  "dumpGraph": true,
+  "prd": "# Task: User Manager Module\n\n## Task: Full delivery pipeline\n\nRun the complete delivery pipeline: import this PRD into the graph, decompose into tasks, implement the code, mark tasks done.\n\n### Implementation: User Manager\n\nCreate a small user management module with two files:\n\n#### 1. `user-ops.js`\n\nA module that exports:\n- `validateUsername(name)` — returns `true` if name is a non-empty string with at least 2 characters, `false` otherwise\n- `greetUser(name)` — returns `\"Welcome, {name}!\"` if name is valid, throws an error if invalid\n\n#### 2. `user-ops.test.js`\n\nTests for both functions covering:\n- Valid names (e.g., \"Alice\")\n- Invalid names (empty string, single char, non-string)\n- Greeting format\n\n### Pipeline Steps\n1. **import** — Create graph nodes from this PRD\n2. **decompose** — Split into task/subtask nodes\n3. **implement** — Write the code files\n4. **done** — Mark tasks complete\n\n### Acceptance Criteria\n- `validateUsername('Alice')` returns `true`\n- `validateUsername('')` returns `false`\n- `validateUsername('A')` returns `false`\n- `greetUser('Alice')` returns `\"Welcome, Alice!\"`\n- `greetUser('')` throws an Error\n\n### Notes\n- Test runner: `node --test`\n- Files are at root (./)",
+  "testCmd": "node --test delivery.test.js",
+  "tags": ["delivery", "pipeline", "multi-file"]
+}

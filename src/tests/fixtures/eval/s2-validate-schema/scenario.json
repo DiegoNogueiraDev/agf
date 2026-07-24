@@ -1,0 +1,9 @@
+{
+  "id": "s2-validate-schema",
+  "tier": "S",
+  "prd": "Create a Zod schema `UserSchema` with fields: id (string UUID), email (string email), age (number 0-150). Export from src/schemas/user.ts. AC: safeParse rejects invalid emails.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["schema", "zod", "simple"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

@@ -1,0 +1,80 @@
+# Runtime artifacts
+node_modules/
+dist/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment files
+.env
+
+# Secrets (API keys, tokens) — nunca commitar
+secrets/
+.env.*
+.key
+openrouter-key.md
+# .npmrc IS tracked (not ignored): legacy-peer-deps=true must be the same in
+# local dev and CI, or a clean `npm ci` hits a real ERESOLVE (node_d5070cab243f)
+# that legacy-peer-deps locally masks. The auth line is a safe env-var
+# reference (${NPM_TOKEN}), never a literal secret.
+
+# Build / package manager
+# package-lock.json is tracked (not ignored): the native-matrix CI job (test.yml)
+# validates the real npm-install path via `npm ci`, which requires a committed
+# lockfile — bun.lock alone is not enough for that job (node_2304b21e918d).
+pnpm-lock.yaml
+yarn.lock
+
+# Workspace metadata
+.vscode/
+.idea/
+.DS_Store
+
+# Project-specific local data
+workflow-graph/
+
+# Offline pack output + dogfood graph
+dist-offline/
+dogfood/
+
+# Generated reports
+docs/parity-report.json
+
+# Optional caches
+.cache/
+.next/
+.out/
+rollup-plugin-cache/
+.agf-compress-cache
+
+# Package artifacts — pack locally, never track in git
+*.tgz
+
+# Bun standalone binaries — built by `bun run pack:bun` / CI, never committed
+dist-bun/
+
+# graph-catalyst scan/PRD scratch — deterministic diagnosis artifacts, regenerable
+.catalyst/
+
+# repomix generated dump (investigation artifact)
+repomix-output.xml
+.gstack/
+# mcp-graph workflow
+.mcp-graph-cache/
+
+# agf docs — generated graph overview (regenerate via `agf docs`)
+docs/graph-overview.md
+
+# Copyright: never commit third-party PDFs/books
+*.pdf
+
+# Internal working docs — keep out of the public repo
+docs/_internal/
+docs/notes/
+.env-key
+
+# Artigos de referência com identificadores privados — nunca versionar
+docs/artigo-okr-sbst-*.md

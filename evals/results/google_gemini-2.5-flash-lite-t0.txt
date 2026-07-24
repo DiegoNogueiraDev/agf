@@ -1,0 +1,41 @@
+Eval: 5 cenário(s) × 1 = 5 run(s) · LIVE (google/gemini-2.5-flash-lite)
+
+▶ T0 t0-abs …
+  ✗ não-resolvido · 0 tok · 8628ms · parou 'escalation'
+▶ T0 t0-cap …
+  ✗ não-resolvido · 8996 tok · 28063ms · parou 'escalation'
+▶ T0 t0-concat …
+  ✗ não-resolvido · 12093 tok · 48519ms · parou 'escalation'
+▶ T0 t0-even …
+  ✗ não-resolvido · 13180 tok · 38059ms · parou 'escalation'
+▶ T0 t0-mul …
+  ✓ resolvido · 3998 tok · 17893ms · parou 'done'
+
+Scorecard — 1/5 resolvidos (20%) · custo-por-sucesso $0.0000 · 38267 tok
+
+Por tier (resolve% × custo/sucesso × tokens × p50/p95):
+  tier   resolve        custo/sucesso  tok/task  p50/p95
+  T0     1/5 20%        $0.0000        7653      28063/48519ms
+
+Simulação cross-provider — MESMO trabalho (5552 in / 32715 out, cache 0) sob cada modelo:
+
+  modelo                     in/out $/1M         custo  fator
+  ------------------------------------------------------------
+  claude-opus-4              15/75             $2.5369  255.3×
+  claude-3-opus              15/75             $2.5369  255.3×
+  o1                         15/60             $2.0462  205.9×
+  gpt-4-turbo                10/30             $1.0370  104.3×
+  claude-sonnet-4            3/15              $0.5074  51.1×
+  claude-3-5-sonnet          3/15              $0.5074  51.1×
+  o1-mini                    3/12              $0.4092  41.2×
+  gpt-4o                     2.5/10            $0.3410  34.3×
+  gemini-1.5-pro             1.25/5            $0.1705  17.2×
+  claude-haiku-4             0.8/4             $0.1353  13.6×
+  claude-3-5-haiku           0.8/4             $0.1353  13.6×
+  deepseek/deepseek-r1       0.55/2.19         $0.0747  7.5×
+  gpt-4o-mini                0.15/0.6          $0.0205  2.1×
+  gemini-2.0-flash           0.075/0.3         $0.0102  1.0×
+  deepseek/deepseek-chat     0.14/0.28         $0.0099  1.0×
+
+Pior caso: $2.5369 (claude-opus-4) · mais barato: $0.0099 · margem 255×.
+Mesmo trabalho, mesma acurácia esperada — a escolha de modelo/rota é a maior alavanca de $.
