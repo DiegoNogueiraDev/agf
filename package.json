@@ -150,7 +150,7 @@
     "express": "^5.1.0",
     "fast-xml-parser": "^5.9.3",
     "glob": "^13.0.6",
-    "ink": "^6.8.0",
+    "ink": "^7.1.1",
     "ink-spinner": "^5.0.0",
     "ink-text-input": "^6.0.0",
     "lru-cache": "^11.2.7",
