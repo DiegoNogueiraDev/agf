@@ -157,7 +157,7 @@
     "mammoth": "^1.12.0",
     "pdf-parse": "^2.4.5",
     "react": "^19.2.7",
-    "smol-toml": "^1.7.0",
+    "smol-toml": "^1.7.1",
     "ts-morph": "^28.0.0",
     "web-tree-sitter": "^0.26.10",
     "ws": "^8.21.0",
