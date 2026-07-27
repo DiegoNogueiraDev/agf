@@ -1,0 +1,8 @@
+[[filters]]
+name = "jq"
+priority = 70
+detect = ["^{", "^\\[", "jq "]
+
+[filters.pipeline]
+strip_ansi = true
+head_lines = 500

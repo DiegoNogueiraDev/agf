@@ -1,0 +1,9 @@
+[[filters]]
+name = "playwright"
+priority = 40
+detect = ["Running \\d+ test", " playwright ", "expect\\( ", "locator\\(", "page\\("]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 200

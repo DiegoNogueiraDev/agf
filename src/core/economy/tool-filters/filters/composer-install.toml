@@ -1,0 +1,10 @@
+[[filters]]
+name = "composer-install"
+priority = 50
+detect = ["composer", "Installing", "Package", "Nothing to install"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 50
+on_empty = "packages up to date"

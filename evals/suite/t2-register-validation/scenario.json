@@ -1,0 +1,8 @@
+{
+  "id": "t2-register-validation",
+  "tier": "T2",
+  "persona": "product",
+  "prd": "# Task: validar e-mail no cadastro\n\n## Task: criar validate.js e usar no register\nCrie um novo arquivo `validate.js` exportando `isEmail(s)` (regex simples: tem `@` e um `.` depois). Depois, em `app.js`, faça `register(email)` lançar `Error('invalid email')` quando o e-mail for inválido, mantendo o comportamento atual para e-mails válidos.\n\n### Acceptance Criteria\n- `register('a@b.co')` retorna `{ email: 'a@b.co' }`\n- `register('bad')` lança erro\n- `isEmail('x@y.com')` é `true`; `isEmail('nope')` é `false`",
+  "testCmd": "node --test",
+  "tags": ["multi-file", "feature", "validation"]
+}

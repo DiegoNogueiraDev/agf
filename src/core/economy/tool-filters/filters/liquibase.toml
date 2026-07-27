@@ -1,0 +1,9 @@
+[[filters]]
+name = "liquibase"
+priority = 50
+detect = ["Liquibase", "Running Changeset", "liquibase"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100

@@ -1,0 +1,9 @@
+[[filters]]
+name = "oxlint"
+priority = 32
+detect = ["oxlint", "\\d+ problems?", "Found"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 300
+on_empty = "no lint errors"

@@ -1,0 +1,10 @@
+[[filters]]
+name = "go-build"
+priority = 41
+detect = ["go build", "go vet", "# ", "package ", "undefined:", "cannot find package", "syntax error"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 200
+on_empty = "build succeeded"

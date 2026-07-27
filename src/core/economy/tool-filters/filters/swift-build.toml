@@ -1,0 +1,10 @@
+[[filters]]
+name = "swift-build"
+priority = 50
+detect = ["swift build", "Compiling", "Build complete", "Build failed", "error:"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  Compiling"]
+max_lines = 200
+on_empty = "build succeeded"

@@ -1,0 +1,8 @@
+{
+  "id": "t0-even",
+  "tier": "T0",
+  "persona": "dev",
+  "prd": "# Task: implementar isEven\n\n## Task: implementar isEven(n)\nAdicione `exports.isEven = (n) => n % 2 === 0` em `math.js` (detecta se inteiro é par).\n\n### Acceptance Criteria\n- `isEven(4)` retorna `true`\n- `isEven(7)` retorna `false`\n- `isEven(0)` retorna `true`",
+  "testCmd": "node --test",
+  "tags": ["math", "atomic"]
+}

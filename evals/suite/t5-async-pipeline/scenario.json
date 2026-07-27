@@ -1,0 +1,8 @@
+{
+  "id": "t5-async-pipeline",
+  "tier": "T5",
+  "persona": "dev",
+  "prd": "# Task: pipeline assíncrono com retry\n\n## Task: criar pipeline.js com createPipeline\n\nCrie `pipeline.js` na raiz exportando `createPipeline(opts?)`:\n- `pipe.use(fn)` — adiciona etapa `async (ctx) => {}`. Etapas rodam em sequência.\n- `await pipe.run(initialCtx)` — executa etapas em ordem, retorna ctx final.\n- Se etapa lançar erro, pipeline **para** e retorna `{ error, step }`.\n- `createPipeline({ retry: N })` — tenta etapa N vezes antes de desistir.\n\nUse CommonJS (`module.exports` / `require`). Não use classes.\n\n### Acceptance Criteria\n- Etapas rodam em ordem\n- ctx passa entre etapas\n- Para no primeiro erro (não executa etapas seguintes)\n- Retry: tenta até N vezes, resolve se falha for temporária",
+  "testCmd": "node --test",
+  "tags": ["async", "pipeline", "retry", "error-handling"]
+}

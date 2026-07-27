@@ -1,0 +1,9 @@
+[[filters]]
+name = "jira"
+priority = 50
+detect = ["jira", "ISSUE", "SUMMARY", "STATUS", "Priority"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 100

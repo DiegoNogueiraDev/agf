@@ -1,0 +1,11 @@
+# go test — failures only, strip ok lines
+[[filters]]
+name = "go-test"
+priority = 40
+detect = ["^--- FAIL:", "^ok\\s+", "^FAIL\\s+", "\\d+ passed"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^ok\\s+\\S+\\s+"]
+max_lines = 200
+on_empty = "all tests passed"

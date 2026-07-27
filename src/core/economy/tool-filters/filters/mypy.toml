@@ -1,0 +1,9 @@
+[[filters]]
+name = "mypy"
+priority = 30
+detect = ["mypy", "Success: no issues", "Found \\d+ error", "\\S+.py:\\d+: error:"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 200
+on_empty = "no type issues"

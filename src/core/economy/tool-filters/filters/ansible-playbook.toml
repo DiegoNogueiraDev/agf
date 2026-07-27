@@ -1,0 +1,9 @@
+[[filters]]
+name = "ansible-playbook"
+priority = 50
+detect = ["PLAY \\[", "TASK \\[", "ok: \\[", "changed: \\[", "failed: \\["]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^PLAY RECAP"]
+max_lines = 200

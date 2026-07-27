@@ -1,0 +1,10 @@
+[[filters]]
+name = "hadolint"
+priority = 50
+detect = ["DL\\d{4}", "hadolint"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100
+on_empty = "no Dockerfile issues"

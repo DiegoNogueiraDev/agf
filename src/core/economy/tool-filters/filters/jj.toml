@@ -1,0 +1,8 @@
+[[filters]]
+name = "jj"
+priority = 15
+detect = ["jj ", "Working copy", "Parent", "Conflict", "Rebased"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 80

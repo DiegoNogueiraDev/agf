@@ -1,0 +1,9 @@
+{
+  "id": "s1-add-util",
+  "tier": "S",
+  "prd": "Add a utility function `clamp(value, min, max)` that returns value clamped between min and max. Export it from src/utils/clamp.ts. Write a unit test.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["utility", "simple"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

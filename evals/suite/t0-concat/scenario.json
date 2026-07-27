@@ -1,0 +1,8 @@
+{
+  "id": "t0-concat",
+  "tier": "T0",
+  "persona": "dev",
+  "prd": "# Task: implementar concat\n\n## Task: implementar concat(a, b)\nAdicione `exports.concat = (a, b) => a + b` em `hello.js` (concatenação de strings).\n\n### Acceptance Criteria\n- `concat('Hello', 'World')` retorna `'HelloWorld'`\n- `concat('abc', '')` retorna `'abc'`\n- `concat('', 'xyz')` retorna `'xyz'`",
+  "testCmd": "node --test",
+  "tags": ["string", "atomic"]
+}

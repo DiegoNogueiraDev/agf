@@ -1,0 +1,9 @@
+[[filters]]
+name = "yamllint"
+priority = 32
+detect = ["yamllint", "error:", "warning:"]
+
+[filters.pipeline]
+strip_ansi = true
+max_lines = 100
+on_empty = "no YAML issues"

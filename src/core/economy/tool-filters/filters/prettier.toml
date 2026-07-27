@@ -1,0 +1,11 @@
+# prettier — only list files that need formatting
+[[filters]]
+name = "prettier"
+priority = 50
+detect = ["Code style issues", "would be formatted"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^Checking formatting"]
+head_lines = 100
+on_empty = "all files formatted"

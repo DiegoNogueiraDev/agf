@@ -1,0 +1,10 @@
+[[filters]]
+name = "poetry-install"
+priority = 50
+detect = ["Creating virtualenv", "Installing", "poetry", "dependencies", "No dependencies to install"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 50
+on_empty = "dependencies up to date"

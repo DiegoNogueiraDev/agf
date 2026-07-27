@@ -1,0 +1,12 @@
+# vitest/jest — failures only, strip PASS lines, keep summary
+[[filters]]
+name = "vitest"
+priority = 40
+detect = ["Tests\\s+\\d+ failed", "FAIL\\s+", "✓|✗|PASS|FAIL", "Test Files"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^\\s*✓", "^\\s*PASS"]
+replace = [["Tests\\s+(\\d+) failed \\| (\\d+) passed", "FAILURES: $1 | TOTAL: $1+$2"]]
+max_lines = 200
+on_empty = "all tests passed"

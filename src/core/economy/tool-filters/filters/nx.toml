@@ -1,0 +1,9 @@
+[[filters]]
+name = "nx"
+priority = 50
+detect = ["NX", ">  NX", "nx run", "graph", "Running target"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 200

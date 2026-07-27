@@ -1,0 +1,10 @@
+[[filters]]
+name = "uv-sync"
+priority = 50
+detect = ["Resolved", "Prepared", "Installed", "uv sync", "Unchanged"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 50
+on_empty = "environment up to date"

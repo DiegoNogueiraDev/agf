@@ -1,0 +1,10 @@
+# git log — one-line per commit, max 50 commits
+[[filters]]
+name = "git-log"
+priority = 15
+detect = ["commit [0-9a-f]{7,40}", "Author:", "Date:"]
+
+[filters.pipeline]
+strip_ansi = true
+replace = [["^commit ([0-9a-f]{7})[0-9a-f]+", "commit $1"], ["^Author: (.*) <.*>", "Author: $1"], ["^Date:\\s+", "Date: "]]
+max_lines = 80

@@ -1,0 +1,170 @@
+name: package-bun
+
+# Builds the 5 tamper-resistant, self-contained agf binaries (darwin arm64/x64,
+# linux x64/arm64) via `bun run pack:bun`. Bun cross-compiles every
+# OS/arch from one host (SQLite is the embedded bun:sqlite — no native .node), so
+# no OS matrix is needed.
+#
+# Except for one thing: a darwin binary only carries a valid ad-hoc signature when
+# the host IS macOS, because `pack:bun` re-signs through `codesign` and there is no
+# cross-signing. Darwin binaries built on Linux are the ones macOS calls "damaged".
+#
+# So `release` runs on the macOS runner, signs, and copies the binaries straight to
+# the host that serves them. It does not hand them to GitHub first: artifact storage
+# is an account-wide quota, it has been exhausted before, and a full quota turns a
+# successful build into a red job (node_f7c8e222631a). Both runners are ours; the
+# shortest path between them is ssh.
+#
+# `validate` builds on every ordinary push and publishes nothing. That is its entire
+# purpose: a broken `pack:bun` should turn a job red before a release needs it.
+#
+# Every job is self-hosted, and every job is gated on the runner labels being
+# configured. In a fork or a public mirror, where no such runner exists, the
+# workflow disables itself instead of queueing forever against a runner that will
+# never come.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/pack-bun.mjs'
+      - 'scripts/codesign-darwin.mjs'
+      - 'package.json'
+      # `bun install --frozen-lockfile` reads this and nothing else does — local
+      # development runs npm. A drift here fails the build, so a change here has
+      # to be able to start one.
+      - 'bun.lock'
+      - '.github/workflows/package-bun.yml'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish the built binaries to the release channel'
+        type: boolean
+        default: false
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: package-bun-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Ordinary push: does it still build? Nothing is written anywhere. ──────────
+  validate:
+    name: validate (build only)
+    if: >-
+      vars.AGF_RUNNER_LABELS != '' &&
+      github.event_name == 'push' &&
+      !startsWith(github.event.head_commit.message, 'chore(release)')
+    runs-on: ${{ fromJSON(vars.AGF_RUNNER_LABELS) }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - name: Put bun on PATH (user-local install)
+        run: echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+      - run: bun install --frozen-lockfile
+      - run: bun run pack:bun
+      - run: cat dist-bun/BUILDINFO
+
+  # ── A release: build where darwin can be signed, publish from there. ──────────
+  release:
+    name: release (macOS — signs darwin, publishes over ssh)
+    # A manual dispatch always builds and signs, whether or not it goes on to
+    # publish. `publish: false` is therefore a full rehearsal: it proves the
+    # signature on the machine that makes it, and writes nowhere.
+    if: >-
+      vars.AGF_MAC_RUNNER_LABELS != '' &&
+      ( github.event_name == 'release' ||
+        github.event_name == 'workflow_dispatch' ||
+        startsWith(github.event.head_commit.message, 'chore(release)') )
+    runs-on: ${{ fromJSON(vars.AGF_MAC_RUNNER_LABELS) }}
+    env:
+      PUBLISHING: >-
+        ${{ github.event_name == 'release' ||
+            (github.event_name == 'workflow_dispatch' && inputs.publish) ||
+            startsWith(github.event.head_commit.message, 'chore(release)') }}
+      # The ssh alias and the absolute path both live in repository secrets. A
+      # public mirror of this file must not disclose the address, the account, or
+      # the filesystem layout of the machine that serves the binaries.
+      RELEASE_SSH: ${{ secrets.AGF_RELEASE_SSH }}
+      RELEASES_DIR: ${{ secrets.AGF_RELEASES_DIR }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - name: Put bun on PATH (user-local install)
+        run: echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+      - run: bun install --frozen-lockfile
+      - run: bun run pack:bun
+
+      # The reason this job runs on macOS at all. A missing signature must stop the
+      # release here, loudly, instead of shipping a binary macOS refuses to open
+      # while the changelog promises it works.
+      #
+      # BUILDINFO has no file extension, so `require()` would read it as CommonJS
+      # and throw on the first colon — an exception that exits 1 under a step named
+      # "refuse", and so looks exactly like the guard working. Parse it as JSON.
+      - name: Refuse to publish an unsigned darwin binary
+        run: |
+          set -euo pipefail
+          cat dist-bun/BUILDINFO
+          node -e '
+            const { targets } = JSON.parse(require("node:fs").readFileSync("dist-bun/BUILDINFO", "utf8"))
+            const unsigned = targets.filter((t) => t.os === "darwin" && !t.signed)
+            if (unsigned.length === 0) process.exit(0)
+            console.error(`::error::darwin built unsigned on ${process.platform} — macOS will call it damaged`)
+            process.exit(1)
+          '
+          codesign -v dist-bun/agf-darwin-arm64
+          codesign -v dist-bun/agf-darwin-x64
+
+      - name: Publish binaries to the release channel
+        if: env.PUBLISHING == 'true'
+        run: |
+          set -euo pipefail
+          if [ -z "${RELEASE_SSH:-}" ] || [ -z "${RELEASES_DIR:-}" ]; then
+            echo "::warning::release host not configured — skipping publish"
+            exit 0
+          fi
+          scp -o BatchMode=yes dist-bun/agf-* dist-bun/BUILDINFO "$RELEASE_SSH:$RELEASES_DIR/"
+          # The bytes that landed, not the bytes that were built. scp truncates on
+          # a full disk, and the served file is the only promise that counts.
+          ssh -o BatchMode=yes "$RELEASE_SSH" "cd '$RELEASES_DIR' && sha256sum -c ./*.sha256"
+
+      # node_8afe7afda8ae: build-linux-packages.sh (AppImage/.deb) had a real,
+      # tested build script that was never wired into any workflow — no artifact
+      # ever reached a user. continue-on-error is deliberate: this runner may not
+      # have Docker, and a packaging failure must never break the binary release.
+      - name: Build Linux packages (.deb + AppImage)
+        if: env.PUBLISHING == 'true'
+        continue-on-error: true
+        run: bash scripts/build-linux-packages.sh all
+
+      - name: Attach binaries to the Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            dist-bun/agf-darwin-arm64 dist-bun/agf-darwin-x64 \
+            dist-bun/agf-linux-x64 dist-bun/agf-linux-arm64 \
+            dist-bun/agf-darwin-arm64.sha256 dist-bun/agf-darwin-x64.sha256 \
+            dist-bun/agf-linux-x64.sha256 dist-bun/agf-linux-arm64.sha256 \
+            dist-bun/BUILDINFO \
+            --clobber
+
+      # Best-effort: only attempts an upload if the packaging step above actually
+      # produced files (continue-on-error means it may not have).
+      - name: Attach Linux packages to the Release, if built
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          packages=(dist-packages/*.deb dist-packages/*.AppImage)
+          if [ ${#packages[@]} -eq 0 ]; then
+            echo "::warning::No Linux packages built (Docker unavailable on this runner) — skipping"
+            exit 0
+          fi
+          gh release upload "${{ github.event.release.tag_name }}" "${packages[@]}" --clobber

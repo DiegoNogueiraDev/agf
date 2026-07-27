@@ -1,0 +1,146 @@
+# ========================================
+# LEAN CONTEXT (agent-graph-flow)
+# Filosofia: zero auto-load, tudo on-demand via CLI agf
+# Gerado por: agf init
+# ========================================
+
+# === DEPENDENCIAS ===
+node_modules/
+
+# === SIBLING REPOS / VENDORED FORKS ===
+*-skills/
+*-main/
+*-pilot/
+hermes-*
+understand-*
+vendor/
+
+# === GIT / GITHUB ===
+.git/
+.gitattributes
+.github/
+
+# === BUILDS / COMPILADOS ===
+dist/
+build/
+out/
+.next/
+.turbo/
+.cache/
+*.tsbuildinfo
+*.js.map
+*.d.ts.map
+
+# === TESTES + COVERAGE (use agf context para navegar testes) ===
+src/tests/
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+coverage/
+test-results/
+test-screenshots/
+playwright-report/
+.nyc_output/
+
+# === LOGS ===
+logs/
+*.log
+
+# === DOCS (agf serve como fonte de docs) ===
+docs/
+*.md
+!CLAUDE.md
+!README.md
+
+# === SCRIPTS / TEMPLATES / DATA ===
+scripts/
+templates/
+data/
+
+# === ARQUIVOS GERADOS ===
+**/prisma/migrations/
+**/prisma/generated/
+**/types/generated/
+**/*.generated.ts
+
+# === AMBIENTE / SECRETS ===
+.env*
+!.env.example
+
+# === TEMP / BACKUPS ===
+**/uploads/
+**/temp/
+**/tmp/
+*.backup
+*.bak
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# === DADOS GRAPH / SQLITE / STORES ===
+.mcp-graph/
+ai-shadow/
+workflow-graph/
+*.db
+*.db-shm
+*.db-wal
+
+# === MIDIA / BINARIOS ===
+*.mp4
+*.pdf
+*.zip
+*.tar
+*.gz
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.woff*
+*.ttf
+
+# === LOCKS ===
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# === CACHE ===
+.eslintcache
+.husky/
+
+# === CONFIGS (ler sob demanda) ===
+**/tailwind.config.*
+**/postcss.config.*
+**/tsconfig*.json
+**/eslint*
+**/.prettier*
+**/vitest.config.*
+**/playwright.config.*
+docker-compose*.yml
+Dockerfile*
+
+# === CLAUDE (exceto rules/) ===
+.claude/skills/
+.claude/plans/
+.claude/docs/
+.claude/data/
+.claude/*.md
+.claude/*.json
+.claude/*.json.backup
+
+# === ROOT NAO-ESSENCIAIS ===
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+release-please-config.json

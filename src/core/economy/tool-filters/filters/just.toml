@@ -1,0 +1,9 @@
+[[filters]]
+name = "just"
+priority = 50
+detect = ["error:", "recipe failed", "Justfile"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100

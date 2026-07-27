@@ -1,0 +1,9 @@
+{
+  "id": "m1-implement-command",
+  "tier": "M",
+  "prd": "Implement a CLI command `count-nodes` that reads a graph.json file and outputs the count of nodes by type (epic, task, subtask). Use commander. AC: outputs JSON with byType counts; handles missing file with error message.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["cli", "command", "medium"],
+  "tokenBudget": 10000,
+  "expectedResolve": true
+}

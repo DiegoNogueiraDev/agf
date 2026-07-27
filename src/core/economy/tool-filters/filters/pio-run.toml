@@ -1,0 +1,9 @@
+[[filters]]
+name = "pio-run"
+priority = 40
+detect = ["PlatformIO", "Verbose mode", "Building in", "Linking", "RAM:.*FLASH:"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^Verbose mode"]
+head_lines = 80

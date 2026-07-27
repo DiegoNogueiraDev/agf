@@ -1,0 +1,21 @@
+{
+  "name": "agf-default",
+  "primary": "#e7a44b",
+  "accent": "#c9a468",
+  "success": "#86b86a",
+  "warning": "#d97a35",
+  "error": "#e08a5a",
+  "text": "#f0ead9",
+  "textMuted": "#cabfa6",
+  "background": "#3a3122",
+  "surface": "#0b0a07",
+  "border": "rgba(231,164,75,.26)",
+  "syntax": {
+    "keyword": "#e7a44b",
+    "string": "#86b86a",
+    "comment": "#cabfa6",
+    "function": "#c9a468",
+    "variable": "#f0ead9",
+    "number": "#d97a35"
+  }
+}

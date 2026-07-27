@@ -1,0 +1,9 @@
+{
+  "id": "s4-format-output",
+  "tier": "S",
+  "prd": "Implement `formatTable(rows: string[][]): string` that formats rows as aligned columns. Export from src/utils/format-table.ts. AC: rows aligned by column width.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["formatting", "simple"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

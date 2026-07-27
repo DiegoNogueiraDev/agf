@@ -1,0 +1,37 @@
+[
+  {
+    "name": "npm-audit",
+    "priority": 52,
+    "detect": ["^#?\\s*npm audit report", "vulnerabilit(y|ies)"],
+    "keep": ["Severity:\\s*(high|critical)", "CRITICAL|HIGH", "vulnerabilit", "GHSA-|CVE-", "fix available"],
+    "drop": ["Severity:\\s*(low|moderate|info)"]
+  },
+  {
+    "name": "trivy",
+    "priority": 52,
+    "detect": ["^Total:\\s+\\d+\\s+\\(", "(CRITICAL|HIGH|MEDIUM|LOW):\\s*\\d+"],
+    "keep": ["CRITICAL|HIGH", "Total:", "CVE-", "GHSA-"],
+    "drop": ["MEDIUM:|LOW:|UNKNOWN:"]
+  },
+  {
+    "name": "docker-build",
+    "priority": 45,
+    "detect": ["^Step \\d+/\\d+ :", "^#\\d+ \\[", "Successfully built"],
+    "keep": ["[Ee]rror|ERROR|failed|Successfully built|Successfully tagged"],
+    "drop": ["^Step \\d+/\\d+ :", "--->", "^#\\d+ (extracting|sha256|DONE|CACHED|naming|exporting)"]
+  },
+  {
+    "name": "kubectl-get",
+    "priority": 46,
+    "detect": ["^NAME\\s+READY\\s+STATUS", "^NAME\\s+TYPE\\s+CLUSTER-IP"],
+    "keep": ["Error|CrashLoopBackOff|Pending|ImagePullBackOff|Evicted|OOMKilled|^NAME\\s"],
+    "drop": ["\\bRunning\\b|\\bCompleted\\b"]
+  },
+  {
+    "name": "terraform-plan",
+    "priority": 47,
+    "detect": ["^Terraform will perform", "^Plan:\\s+\\d+ to add", "will be (created|destroyed|replaced)"],
+    "keep": ["will be (created|destroyed|replaced)", "^Plan:", "^Error:|error", "forces replacement"],
+    "drop": ["^\\s+[~] .*=", "# \\(\\d+ unchanged"]
+  }
+]

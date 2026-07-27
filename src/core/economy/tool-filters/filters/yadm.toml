@@ -1,0 +1,9 @@
+[[filters]]
+name = "yadm"
+priority = 20
+detect = ["yadm", "Already up to date", "dotfiles"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 50

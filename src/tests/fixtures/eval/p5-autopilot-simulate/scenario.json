@@ -1,0 +1,10 @@
+{
+  "id": "p5-autopilot-simulate",
+  "tier": "M",
+  "persona": "product",
+  "prd": "You are an autonomous agent using the agent-graph-flow (agf) CLI to run an autonomous task loop.\n\nYour task:\n1. Initialize a new agf project: run `agf init --silent` (or `agf init`)\n2. Add 2 tasks to the graph:\n   - `agf node add --title 'Task A: write unit test' --type task --priority 1`\n   - `agf node add --title 'Task B: implement function' --type task --priority 2`\n3. Run autopilot in simulate mode for 1 step: `agf autopilot --simulate --max 1`\n4. Check if any task was processed: run `agf stats` and write the output to `autopilot-stats.json`\n5. Verify the autopilot ran without error by writing 'autopilot:ok' to `autopilot-result.txt`\n\nThe task is complete when: autopilot-result.txt contains 'autopilot:ok', and autopilot-stats.json is non-empty (agf stats succeeded after autopilot run).",
+  "testCmd": "test -f autopilot-result.txt && grep -q 'autopilot:ok' autopilot-result.txt && test -f autopilot-stats.json && test -s autopilot-stats.json",
+  "tags": ["product-relevant", "autopilot", "autonomous", "simulate", "agf"],
+  "tokenBudget": 10000,
+  "expectedResolve": true
+}

@@ -1,0 +1,8 @@
+{
+  "id": "t0-abs",
+  "tier": "T0",
+  "persona": "dev",
+  "prd": "# Task: implementar abs\n\n## Task: implementar abs(n)\nAdicione `exports.abs = (n) => n < 0 ? -n : n` em `math.js` (valor absoluto de inteiro).\n\n### Acceptance Criteria\n- `abs(5)` retorna `5`\n- `abs(-3)` retorna `3`\n- `abs(0)` retorna `0`",
+  "testCmd": "node --test",
+  "tags": ["math", "atomic"]
+}

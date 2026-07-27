@@ -1,0 +1,41 @@
+Eval: 5 cenário(s) × 1 = 5 run(s) · LIVE (openai/gpt-5-mini)
+
+▶ T0 t0-abs …
+  ✗ não-resolvido · 3624 tok · 30146ms · parou 'escalation'
+▶ T0 t0-cap …
+  ✗ não-resolvido · 3192 tok · 28673ms · parou 'escalation'
+▶ T0 t0-concat …
+  ✗ não-resolvido · 2146 tok · 19652ms · parou 'escalation'
+▶ T0 t0-even …
+  ✗ não-resolvido · 2711 tok · 23405ms · parou 'escalation'
+▶ T0 t0-mul …
+  ✗ não-resolvido · 2596 tok · 24697ms · parou 'escalation'
+
+Scorecard — 0/5 resolvidos (0%) · custo-por-sucesso — · 14269 tok
+
+Por tier (resolve% × custo/sucesso × tokens × p50/p95):
+  tier   resolve        custo/sucesso  tok/task  p50/p95
+  T0     0/5 0%         —              2854      24697/30146ms
+
+Simulação cross-provider — MESMO trabalho (6225 in / 8044 out, cache 0) sob cada modelo:
+
+  modelo                     in/out $/1M         custo  fator
+  ------------------------------------------------------------
+  claude-opus-4              15/75             $0.6967  241.9×
+  claude-3-opus              15/75             $0.6967  241.9×
+  o1                         15/60             $0.5760  200.0×
+  gpt-4-turbo                10/30             $0.3036  105.4×
+  claude-sonnet-4            3/15              $0.1393  48.4×
+  claude-3-5-sonnet          3/15              $0.1393  48.4×
+  o1-mini                    3/12              $0.1152  40.0×
+  gpt-4o                     2.5/10            $0.0960  33.3×
+  gemini-1.5-pro             1.25/5            $0.0480  16.7×
+  claude-haiku-4             0.8/4             $0.0372  12.9×
+  claude-3-5-haiku           0.8/4             $0.0372  12.9×
+  deepseek/deepseek-r1       0.55/2.19         $0.0210  7.3×
+  gpt-4o-mini                0.15/0.6          $0.0058  2.0×
+  deepseek/deepseek-chat     0.14/0.28         $0.0031  1.1×
+  gemini-2.0-flash           0.075/0.3         $0.0029  1.0×
+
+Pior caso: $0.6967 (claude-opus-4) · mais barato: $0.0029 · margem 242×.
+Mesmo trabalho, mesma acurácia esperada — a escolha de modelo/rota é a maior alavanca de $.

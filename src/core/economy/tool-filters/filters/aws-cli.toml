@@ -1,0 +1,9 @@
+# aws cli — keep JSON output, truncate massive responses
+[[filters]]
+name = "aws-cli"
+priority = 60
+detect = ["^{", "^\\[", "AWS"]
+
+[filters.pipeline]
+strip_ansi = true
+head_lines = 500

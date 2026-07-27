@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/DiegoNogueiraDev/agf#readme
+    about: Read the documentation before opening an issue.
+  - name: Security Vulnerability
+    url: https://github.com/DiegoNogueiraDev/agf/security/policy
+    about: Report a security vulnerability here. Do NOT open a public issue.

@@ -1,0 +1,10 @@
+[[filters]]
+name = "make"
+priority = 50
+detect = ["Makefile:", "make\\[\\d+\\]", "\\*\\*\\* "]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^make\\[\\d+\\]"]
+keep_lines = ["^make\\[\\d+\\]: \\*\\*\\*", "error:", "warning:"]
+max_lines = 100

@@ -1,0 +1,10 @@
+# docker ps — compact container list
+[[filters]]
+name = "docker-ps"
+priority = 60
+detect = ["CONTAINER ID", "IMAGE", "COMMAND", "STATUS", "PORTS", "NAMES"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 50

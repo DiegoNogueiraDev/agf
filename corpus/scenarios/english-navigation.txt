@@ -1,0 +1,3 @@
+go to https://example.com/login
+expect to be at https://example.com/login
+click on #submit

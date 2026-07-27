@@ -1,0 +1,41 @@
+Eval: 5 cenário(s) × 1 = 5 run(s) · LIVE (google/gemini-2.5-pro)
+
+▶ T0 t0-abs …
+  ✗ não-resolvido · 11594 tok · 99011ms · parou 'escalation'
+▶ T0 t0-cap …
+  ✗ não-resolvido · 2952 tok · 24909ms · parou 'done'
+▶ T0 t0-concat …
+  ✗ não-resolvido · 3246 tok · 27004ms · parou 'done'
+▶ T0 t0-even …
+  ✗ não-resolvido · 7197 tok · 203397ms · parou 'escalation'
+▶ T0 t0-mul …
+  ✗ não-resolvido · 5836 tok · 48082ms · parou 'escalation'
+
+Scorecard — 0/5 resolvidos (0%) · custo-por-sucesso — · 30825 tok
+
+Por tier (resolve% × custo/sucesso × tokens × p50/p95):
+  tier   resolve        custo/sucesso  tok/task  p50/p95
+  T0     0/5 0%         —              6165      48082/203397ms
+
+Simulação cross-provider — MESMO trabalho (3381 in / 27444 out, cache 0) sob cada modelo:
+
+  modelo                     in/out $/1M         custo  fator
+  ------------------------------------------------------------
+  claude-opus-4              15/75             $2.1090  258.5×
+  claude-3-opus              15/75             $2.1090  258.5×
+  o1                         15/60             $1.6974  208.1×
+  gpt-4-turbo                10/30             $0.8571  105.1×
+  claude-sonnet-4            3/15              $0.4218  51.7×
+  claude-3-5-sonnet          3/15              $0.4218  51.7×
+  o1-mini                    3/12              $0.3395  41.6×
+  gpt-4o                     2.5/10            $0.2829  34.7×
+  gemini-1.5-pro             1.25/5            $0.1414  17.3×
+  claude-haiku-4             0.8/4             $0.1125  13.8×
+  claude-3-5-haiku           0.8/4             $0.1125  13.8×
+  deepseek/deepseek-r1       0.55/2.19         $0.0620  7.6×
+  gpt-4o-mini                0.15/0.6          $0.0170  2.1×
+  gemini-2.0-flash           0.075/0.3         $0.0085  1.0×
+  deepseek/deepseek-chat     0.14/0.28         $0.0082  1.0×
+
+Pior caso: $2.1090 (claude-opus-4) · mais barato: $0.0082 · margem 259×.
+Mesmo trabalho, mesma acurácia esperada — a escolha de modelo/rota é a maior alavanca de $.

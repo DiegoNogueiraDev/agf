@@ -1,0 +1,10 @@
+# docker images — compact image list
+[[filters]]
+name = "docker-images"
+priority = 60
+detect = ["REPOSITORY", "TAG", "IMAGE ID", "CREATED", "SIZE"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 50

@@ -1,0 +1,8 @@
+{
+  "id": "t3-file-upload",
+  "tier": "T3",
+  "persona": "dev",
+  "prd": "# Task: validação de upload\n\n## Task: implementar validateUpload(filename, buffer)\n\nEdite `upload.js` (na raiz) para adicionar `validateUpload(filename, buffer)`. O arquivo já tem `isAllowedExt(filename)`. Use `module.exports` para exportar a nova função.\n- Use `isAllowedExt` para verificar a extensão\n- Rejeite arquivos > 5MB\n- Retorne `{ valid: true, filename }` em sucesso\n- Retorne `{ valid: false, error: 'mensagem' }` em falha\n\n### Acceptance Criteria\n- `validateUpload('malware.exe', buf)` retorna `{ valid: false, error }` sobre extensão\n- `validateUpload('photo.jpg', bufPequeno)` retorna `{ valid: true, filename: 'photo.jpg' }`\n- `validateUpload('big.png', bufGrande > 5MB)` retorna `{ valid: false, error }` sobre tamanho",
+  "testCmd": "node --test",
+  "tags": ["validation", "multi-condition"]
+}

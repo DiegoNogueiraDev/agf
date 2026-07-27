@@ -1,0 +1,41 @@
+Eval: 5 cenário(s) × 1 = 5 run(s) · LIVE (deepseek/deepseek-v4-pro)
+
+▶ T0 t0-abs …
+  ✗ não-resolvido · 5875 tok · 255795ms · parou 'escalation'
+▶ T0 t0-cap …
+  ✗ não-resolvido · 5167 tok · 199262ms · parou 'escalation'
+▶ T0 t0-concat …
+  ✗ não-resolvido · 1820 tok · 27518ms · parou 'done'
+▶ T0 t0-even …
+  ✗ não-resolvido · 1839 tok · 45988ms · parou 'done'
+▶ T0 t0-mul …
+  ✗ não-resolvido · 5727 tok · 95790ms · parou 'escalation'
+
+Scorecard — 0/5 resolvidos (0%) · custo-por-sucesso — · 20428 tok
+
+Por tier (resolve% × custo/sucesso × tokens × p50/p95):
+  tier   resolve        custo/sucesso  tok/task  p50/p95
+  T0     0/5 0%         —              4086      95790/255795ms
+
+Simulação cross-provider — MESMO trabalho (4235 in / 16193 out, cache 0) sob cada modelo:
+
+  modelo                     in/out $/1M         custo  fator
+  ------------------------------------------------------------
+  claude-opus-4              15/75             $1.2780  249.3×
+  claude-3-opus              15/75             $1.2780  249.3×
+  o1                         15/60             $1.0351  201.9×
+  gpt-4-turbo                10/30             $0.5281  103.0×
+  claude-sonnet-4            3/15              $0.2556  49.9×
+  claude-3-5-sonnet          3/15              $0.2556  49.9×
+  o1-mini                    3/12              $0.2070  40.4×
+  gpt-4o                     2.5/10            $0.1725  33.6×
+  gemini-1.5-pro             1.25/5            $0.0863  16.8×
+  claude-haiku-4             0.8/4             $0.0682  13.3×
+  claude-3-5-haiku           0.8/4             $0.0682  13.3×
+  deepseek/deepseek-r1       0.55/2.19         $0.0378  7.4×
+  gpt-4o-mini                0.15/0.6          $0.0104  2.0×
+  gemini-2.0-flash           0.075/0.3         $0.0052  1.0×
+  deepseek/deepseek-chat     0.14/0.28         $0.0051  1.0×
+
+Pior caso: $1.2780 (claude-opus-4) · mais barato: $0.0051 · margem 249×.
+Mesmo trabalho, mesma acurácia esperada — a escolha de modelo/rota é a maior alavanca de $.

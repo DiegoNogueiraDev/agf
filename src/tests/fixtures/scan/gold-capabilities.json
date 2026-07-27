@@ -1,0 +1,17 @@
+[
+  { "capability": "graph task management", "presentInAgf": true },
+  { "capability": "sqlite persistence", "presentInAgf": true },
+  { "capability": "cli command parser", "presentInAgf": true },
+  { "capability": "tdd workflow gate", "presentInAgf": true },
+  { "capability": "economy lever calibration", "presentInAgf": true },
+  { "capability": "simhash deduplication", "presentInAgf": true },
+  { "capability": "ncd compression distance", "presentInAgf": true },
+  { "capability": "feature extraction tfidf", "presentInAgf": true },
+  { "capability": "mcp tool server", "presentInAgf": true },
+  { "capability": "provider llm gateway", "presentInAgf": true },
+  { "capability": "blockchain smart contract", "presentInAgf": false },
+  { "capability": "mobile native ios application", "presentInAgf": false },
+  { "capability": "css animation framework", "presentInAgf": false },
+  { "capability": "relational orm database", "presentInAgf": false },
+  { "capability": "payment processing stripe", "presentInAgf": false }
+]

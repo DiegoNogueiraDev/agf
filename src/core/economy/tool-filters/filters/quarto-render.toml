@@ -1,0 +1,9 @@
+[[filters]]
+name = "quarto-render"
+priority = 50
+detect = ["Quarto", "rendering", "output file", "pandoc"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$"]
+max_lines = 100

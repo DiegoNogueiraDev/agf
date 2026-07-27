@@ -1,0 +1,9 @@
+{
+  "id": "graph-crud",
+  "tier": "T1",
+  "persona": "dev",
+  "dumpGraph": true,
+  "prd": "# Task: Graph CRUD Operations\n\n## Task: Create a sample graph via MCP tools\n\nUse the MCP proxy (in-memory SqliteStore) to perform graph CRUD operations:\n\n1. **add_node**: Add at least 2 nodes — one of type `epic` and one of type `task`.\n2. **edge**: Create a `depends_on` edge from the task to the epic.\n3. **update_status**: Set the task status to `done`.\n4. **analyze**: Add a description to at least one node (length > 5 chars).\n\nThe graph state will be dumped to `graph-state.json` after the run.\n\n### Acceptance Criteria\n- At least 2 nodes exist with different types (epic + task)\n- An edge connects them with `depends_on` relation\n- At least one node has status `done`\n- At least one node has an analyze description",
+  "testCmd": "node --test graph-pipeline.test.js",
+  "tags": ["graph", "pipeline", "product"]
+}

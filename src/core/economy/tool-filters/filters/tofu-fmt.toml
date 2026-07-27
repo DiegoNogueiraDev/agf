@@ -1,0 +1,8 @@
+[[filters]]
+name = "tofu-fmt"
+priority = 50
+detect = ["OpenTofu fmt", "formatted"]
+
+[filters.pipeline]
+strip_ansi = true
+on_empty = "all files formatted"

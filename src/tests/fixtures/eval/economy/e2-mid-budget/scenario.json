@@ -1,0 +1,10 @@
+{
+  "id": "e2-mid-budget",
+  "tier": "M",
+  "persona": "dev",
+  "prd": "Add a `TokenBudget` class to src/core/economy/token-budget.ts that tracks tokens spent and remaining against a fixed cap. Methods: `spend(n: number): void`, `remaining(): number`, `exceeded(): boolean`. Throw if spend is called after budget is exceeded. Write unit tests covering each method and the exceeded case.",
+  "testCmd": "echo 'simulate:ok'",
+  "tokenBudget": 8000,
+  "expectedResolve": true,
+  "tags": ["economy", "budget", "mid-budget"]
+}

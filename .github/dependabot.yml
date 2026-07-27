@@ -1,0 +1,51 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/Sao_Paulo'
+    versioning-strategy: increase
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'auto-merge'
+    groups:
+      patch:
+        applies-to: version-updates
+        update-types:
+          - 'patch'
+      minor:
+        applies-to: version-updates
+        update-types:
+          - 'minor'
+      security:
+        applies-to: security-updates
+        update-types:
+          - 'patch'
+    commit-message:
+      prefix: 'chore'
+      prefix-development: 'chore'
+      include: 'scope'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/Sao_Paulo'
+    labels:
+      - 'dependencies'
+      - 'ci'
+      - 'auto-merge'
+    groups:
+      github-actions:
+        update-types:
+          - 'minor'
+          - 'patch'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'

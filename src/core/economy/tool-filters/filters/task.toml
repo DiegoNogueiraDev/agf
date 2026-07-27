@@ -1,0 +1,9 @@
+[[filters]]
+name = "task"
+priority = 50
+detect = ["task ", "Task ", "taskwarrior", "task add", "task list"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 100

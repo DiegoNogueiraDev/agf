@@ -1,0 +1,28 @@
+# ABORTA no primeiro gate que falhar. Sem isto o hook devolve o exit code do
+# ULTIMO comando e todos os anteriores viram decoracao — era o caso aqui:
+# typecheck podia falhar e o push passava, porque test:blast:push vinha depois
+# e passava. Verificado por sabotagem (node_41e538e0b427).
+# npm run (nao bun): este hook e versionado e roda na maquina de quem clonar.
+# O irmao versionado (.husky/pre-commit) ja usa npm; exigir bun aqui quebraria
+# o push de quem nao o tem, sem ganho — medido, os dois levam 19s.
+set -e
+
+# Local CI gate (free — replaces GitHub Actions). Runs the fast blast suite +
+# typecheck before every push. Skip a single push with: git push --no-verify
+npm run typecheck
+# build e lint entraram aqui em node_41e538e0b427: o requisito do projeto diz
+# que toda mudança mantém build/typecheck/test/lint verdes, e só os dois do
+# meio tinham gatilho — os outros dependiam de alguém lembrar. Custo medido:
+# build 6s, lint 10s.
+npm run build
+# --max-warnings é CATRACA, não meta: está fixado na contagem atual (2018) para
+# congelar a dívida sem exigir que ninguém limpe 1018 avisos antes de poder
+# empurrar. Um aviso NOVO reprova; baixar o número é o trabalho de quem limpar.
+npm run lint
+npm run test:blast:push
+# Guards de CONVENCAO: o test:blast:push acima segue o grafo de imports do Vite
+# e e CEGO a testes que inspecionam o repo pelo filesystem — que sao justamente
+# os guards de sigilo, tamanho de arquivo e isolamento de camada. Incidente real
+# (node_f28247996d57): arquivo com identificador privado de cliente foi pushado
+# com o guard existente e verde, porque ele nunca rodou. Custo medido: 21s.
+npm run test:convention

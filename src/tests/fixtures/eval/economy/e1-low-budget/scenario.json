@@ -1,0 +1,10 @@
+{
+  "id": "e1-low-budget",
+  "tier": "S",
+  "persona": "dev",
+  "prd": "Add a pure utility function `formatTokenCount(n: number): string` that returns numbers >= 1000 as '1k', '2.3k', etc., and smaller numbers as their string value. Export from src/core/utils/format-token-count.ts. Write a unit test.",
+  "testCmd": "echo 'simulate:ok'",
+  "tokenBudget": 2000,
+  "expectedResolve": true,
+  "tags": ["economy", "utility", "low-budget"]
+}

@@ -1,0 +1,11 @@
+# eslint — group by rule, truncate long messages
+[[filters]]
+name = "eslint"
+priority = 32
+detect = ["\\d+:\\d+\\s+error\\s+", "\\d+:\\d+\\s+warning\\s+", "\\d+ problem"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 300
+on_empty = "no lint errors"

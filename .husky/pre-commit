@@ -1,0 +1,3 @@
+npm run audit:stubs
+npx --no -- lint-staged
+npm run typecheck

@@ -1,0 +1,10 @@
+[[filters]]
+name = "dotnet-build"
+priority = 50
+detect = ["Build started", "Build succeeded", "Build FAILED", "error CS\\d+", "warning CS\\d+"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^  ", "^Determining"]
+max_lines = 200
+on_empty = "build succeeded"

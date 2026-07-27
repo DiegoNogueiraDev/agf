@@ -1,0 +1,10 @@
+{
+  "id": "p4-next-context-cycle",
+  "tier": "S",
+  "persona": "product",
+  "prd": "You are an autonomous agent using the agent-graph-flow (agf) CLI to pull and understand the next task.\n\nYour task:\n1. Initialize a new agf project: run `agf init --silent` (or `agf init`)\n2. Add a task to the graph: `agf node add --title 'Implement login feature' --type task --priority 1 --ac 'login form renders; auth token stored'`\n3. Pull the next task using `agf next` \u2014 this returns the highest-priority unblocked task\n4. Load context for that task using `agf context <id>` with the ID from step 3\n5. Write the task ID to `next-task-id.txt` and the context summary (first 20 chars) to `context-summary.txt`\n\nThe task is complete when: next-task-id.txt contains a valid node ID (starts with 'node_'), and context-summary.txt is non-empty (context was loaded successfully).",
+  "testCmd": "test -f next-task-id.txt && grep -qE '^node_[a-f0-9]+' next-task-id.txt && test -f context-summary.txt && test -s context-summary.txt",
+  "tags": ["product-relevant", "next-task", "context", "pull-workflow", "agf"],
+  "tokenBudget": 5000,
+  "expectedResolve": true
+}

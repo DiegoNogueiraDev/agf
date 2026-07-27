@@ -1,0 +1,10 @@
+[[filters]]
+name = "pre-commit"
+priority = 50
+detect = ["pre-commit", "Trim Trailing Whitespace", "Fix End of Files", "Check Yaml", "Check Toml", "check python"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^$", "^-+"]
+max_lines = 100
+on_empty = "all hooks passed"

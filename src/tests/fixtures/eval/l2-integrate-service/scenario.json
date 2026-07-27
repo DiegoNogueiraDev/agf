@@ -1,0 +1,9 @@
+{
+  "id": "l2-integrate-service",
+  "tier": "L",
+  "prd": "Integrate the EvalScore quality rubric (src/core/economy/eval-rubric.ts) into the llm-call-ledger persistence: when a call is recorded, optionally accept an EvalScore and persist it as a JSON field `eval_score` in the llm_call_ledger table. AC: recordModelCall accepts optional evalScore; field is null when not provided; summarizeLedger includes avgQualityScore in summary.",
+  "testCmd": "echo 'simulate:ok'",
+  "tags": ["integration", "ledger", "large"],
+  "tokenBudget": 20000,
+  "expectedResolve": true
+}

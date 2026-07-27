@@ -1,0 +1,41 @@
+Eval: 5 cenário(s) × 1 = 5 run(s) · LIVE (google/gemini-2.5-flash)
+
+▶ T0 t0-abs …
+  ✗ não-resolvido · 18293 tok · 94170ms · parou 'escalation'
+▶ T0 t0-cap …
+  ✗ não-resolvido · 8680 tok · 206769ms · parou 'escalation'
+▶ T0 t0-concat …
+  ✗ não-resolvido · 2477 tok · 12063ms · parou 'escalation'
+▶ T0 t0-even …
+  ✗ não-resolvido · 2609 tok · 12100ms · parou 'escalation'
+▶ T0 t0-mul …
+  ✗ não-resolvido · 2600 tok · 13258ms · parou 'escalation'
+
+Scorecard — 0/5 resolvidos (0%) · custo-por-sucesso — · 34659 tok
+
+Por tier (resolve% × custo/sucesso × tokens × p50/p95):
+  tier   resolve        custo/sucesso  tok/task  p50/p95
+  T0     0/5 0%         —              6932      13258/206769ms
+
+Simulação cross-provider — MESMO trabalho (4911 in / 29748 out, cache 0) sob cada modelo:
+
+  modelo                     in/out $/1M         custo  fator
+  ------------------------------------------------------------
+  claude-opus-4              15/75             $2.3048  255.6×
+  claude-3-opus              15/75             $2.3048  255.6×
+  o1                         15/60             $1.8585  206.1×
+  gpt-4-turbo                10/30             $0.9415  104.4×
+  claude-sonnet-4            3/15              $0.4610  51.1×
+  claude-3-5-sonnet          3/15              $0.4610  51.1×
+  o1-mini                    3/12              $0.3717  41.2×
+  gpt-4o                     2.5/10            $0.3098  34.4×
+  gemini-1.5-pro             1.25/5            $0.1549  17.2×
+  claude-haiku-4             0.8/4             $0.1229  13.6×
+  claude-3-5-haiku           0.8/4             $0.1229  13.6×
+  deepseek/deepseek-r1       0.55/2.19         $0.0678  7.5×
+  gpt-4o-mini                0.15/0.6          $0.0186  2.1×
+  gemini-2.0-flash           0.075/0.3         $0.0093  1.0×
+  deepseek/deepseek-chat     0.14/0.28         $0.0090  1.0×
+
+Pior caso: $2.3048 (claude-opus-4) · mais barato: $0.0090 · margem 256×.
+Mesmo trabalho, mesma acurácia esperada — a escolha de modelo/rota é a maior alavanca de $.

@@ -1,0 +1,11 @@
+# cargo test — failures only, strip Compiling/Finished lines
+[[filters]]
+name = "cargo-test"
+priority = 40
+detect = ["running \\d+ test", "test result:", "FAILED"]
+
+[filters.pipeline]
+strip_ansi = true
+strip_lines = ["^\\s+Compiling", "^\\s+Finished", "^\\s+Downloading"]
+max_lines = 200
+on_empty = "all tests passed"

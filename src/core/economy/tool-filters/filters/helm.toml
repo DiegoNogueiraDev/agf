@@ -1,0 +1,9 @@
+[[filters]]
+name = "helm"
+priority = 60
+detect = ["NAME:\\s+", "LAST DEPLOYED:", "NAMESPACE:", "STATUS:", "CHART:", "REVISION:"]
+
+[filters.pipeline]
+strip_ansi = true
+truncate_lines_at = 120
+max_lines = 100
