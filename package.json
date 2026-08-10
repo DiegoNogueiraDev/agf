@@ -146,7 +146,7 @@
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/react": "^19.2.17",
     "adm-zip": "^0.5.18",
-    "better-sqlite3": "^12.11.1",
+    "better-sqlite3": "^13.0.3",
     "cheerio": "^1.2.0",
     "commander": "^14.0.3",
     "express": "^5.1.0",
